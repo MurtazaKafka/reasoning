@@ -20,6 +20,9 @@ console: Any = Console()
 @app.command()
 def main(
     dataset_name: str = typer.Argument("openai/gsm8k", help="Source dataset to augment."),
+    dataset_config: Optional[str] = typer.Option(
+        "main", "--dataset-config", help="Optional dataset config/subset (e.g., main, socratic)."
+    ),
     split: str = typer.Option("train", help="Dataset split to use."),
     limit: Optional[int] = typer.Option(None, help="Optionally limit number of samples."),
     teacher_model: str = typer.Option(
@@ -28,6 +31,12 @@ def main(
     ),
     output_dir: Path = typer.Option(Path("data/augmented"), help="Where to write JSONL files."),
     hf_token_env: str = typer.Option("HF_TOKEN", help="Environment variable with HF token."),
+    forward_filename: str = typer.Option(
+        "forward_reasoning.jsonl", help="Filename for forward reasoning records."
+    ),
+    backward_filename: str = typer.Option(
+        "backward_reasoning.jsonl", help="Filename for backward reasoning records."
+    ),
 ) -> None:
     load_project_env()
     from datasets import load_dataset
@@ -35,13 +44,17 @@ def main(
     token = os.getenv(hf_token_env)
     reasoner = DualReasoner(teacher_model, hf_token=token)
 
-    ds: Any = load_dataset(dataset_name, split=split)
+    load_kwargs = {}
+    if dataset_config:
+        load_kwargs["name"] = dataset_config
+
+    ds: Any = load_dataset(dataset_name, split=split, **load_kwargs)
     if limit:
         ds = ds.select(range(limit))
 
     output_dir.mkdir(parents=True, exist_ok=True)
-    forward_path = output_dir / "forward.jsonl"
-    backward_path = output_dir / "backward.jsonl"
+    forward_path = output_dir / forward_filename
+    backward_path = output_dir / backward_filename
 
     with forward_path.open("w", encoding="utf-8") as fwd_f, backward_path.open(
         "w", encoding="utf-8"

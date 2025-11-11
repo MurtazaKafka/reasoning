@@ -69,12 +69,11 @@ project combines these lines of work to assess the following hypotheses:
    ```
 5. **Generate preference data** – produces forward/backward traces that training expects.
    ```bash
-   python scripts/bootstrap_pairs.py --output-dir data/processed --limit 2000
-   mv data/processed/forward.jsonl data/processed/forward_reasoning.jsonl
-   mv data/processed/backward.jsonl data/processed/backward_reasoning.jsonl
+   python scripts/bootstrap_pairs.py --dataset-config main --output-dir data/processed --limit 2000
    ```
-   Tweak `--limit` or dataset arguments as needed; larger values increase training time and disk
-   usage. The `mv` commands align filenames with the default config paths.
+   This creates `data/processed/forward_reasoning.jsonl` and `data/processed/backward_reasoning.jsonl`
+   by default. Adjust `--limit`, `--dataset-config`, or the optional filename flags if you want to
+   target a different subset or storage layout.
 6. **Kick off training**
    ```bash
    python scripts/train_dpo.py configs/dpo_hybrid.yaml

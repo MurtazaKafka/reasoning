@@ -10,8 +10,8 @@ import typer
 from accelerate import Accelerator
 from datasets import Dataset
 from rich.console import Console
-from transformers import AutoModelForCausalLM, AutoTokenizer, TrainingArguments
 import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer, TrainingArguments
 
 from reasoning_lab.config import load_config
 from reasoning_lab.data.forward_backward_dataset import join_forward_backward, to_dpo_dataset
@@ -69,16 +69,66 @@ def _create_tokenizer(cfg):
     return tokenizer
 
 
-def _create_model(cfg, tokenizer, *, device_map, torch_dtype):
+def _is_cpu_only(device_map) -> bool:
+    return isinstance(device_map, dict) and set(device_map.values()) == {"cpu"}
+
+
+def _resolve_attention_kwargs(cfg, *, allow_flash: bool) -> dict:
+    flash_pref = cfg.model.get("flash_attention")
+    if flash_pref is None:
+        return {}
+
+    if isinstance(flash_pref, bool):
+        if not flash_pref or not allow_flash:
+            return {}
+        return {"attn_implementation": "flash_attention_2"}
+
+    value = str(flash_pref).strip().lower()
+    if value in {"off", "disable", "disabled", "none", "false"}:
+        return {}
+    if value in {"sdpa", "scaled_dot_product"}:
+        return {"attn_implementation": "sdpa"}
+    if value in {"eager", "standard"}:
+        return {"attn_implementation": "eager"}
+
+    # Default to flash attention when permitted.
+    if allow_flash:
+        return {"attn_implementation": "flash_attention_2"}
+    return {}
+
+
+def _build_model_load_kwargs(cfg, *, device_map, torch_dtype, include_quantization: bool) -> dict:
+    allow_flash = not _is_cpu_only(device_map)
     load_kwargs = {
-        "use_flash_attention_2": cfg.model.get("flash_attention", "auto") == "auto",
         "torch_dtype": torch_dtype,
         "device_map": device_map,
     }
-    if cfg.model.get("load_in_8bit", False):
-        load_kwargs["load_in_8bit"] = True
-    if cfg.model.get("load_in_4bit", False):
-        load_kwargs["load_in_4bit"] = True
+    load_kwargs.update(_resolve_attention_kwargs(cfg, allow_flash=allow_flash))
+
+    if include_quantization and allow_flash:
+        if cfg.model.get("load_in_8bit", False):
+            load_kwargs["load_in_8bit"] = True
+        if cfg.model.get("load_in_4bit", False):
+            load_kwargs["load_in_4bit"] = True
+    elif include_quantization and cfg.model.get("load_in_8bit", False):
+        console.log(
+            "[yellow]Skipping 8-bit loading because the run is configured for CPU-only execution.[/yellow]"
+        )
+    elif include_quantization and cfg.model.get("load_in_4bit", False):
+        console.log(
+            "[yellow]Skipping 4-bit loading because the run is configured for CPU-only execution.[/yellow]"
+        )
+
+    return load_kwargs
+
+
+def _create_model(cfg, tokenizer, *, device_map, torch_dtype):
+    load_kwargs = _build_model_load_kwargs(
+        cfg,
+        device_map=device_map,
+        torch_dtype=torch_dtype,
+        include_quantization=True,
+    )
     return AutoModelForCausalLM.from_pretrained(
         cfg.model.base_model,
         trust_remote_code=cfg.model.get("trust_remote_code", False),
@@ -147,8 +197,12 @@ def main(
         ref_model = AutoModelForCausalLM.from_pretrained(
             cfg.model.base_model,
             trust_remote_code=cfg.model.get("trust_remote_code", False),
-            device_map=device_map,
-            torch_dtype=torch_dtype,
+            **_build_model_load_kwargs(
+                cfg,
+                device_map=device_map,
+                torch_dtype=torch_dtype,
+                include_quantization=False,
+            ),
         )
 
     use_bf16 = cfg.experiment.mixed_precision == "bf16" and not use_cpu

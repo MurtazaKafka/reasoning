@@ -27,9 +27,22 @@ def _prepare_dataset(cfg) -> Dataset:
     if cfg.dpo.preference_source == "backward-only":
         include_backward = True
 
+    forward_path = Path(cfg.data.forward_dataset_path)
+    backward_path = Path(cfg.data.backward_dataset_path)
+
+    missing = [str(p) for p in (forward_path, backward_path) if not Path(p).exists()]
+    if missing:
+        hint = (
+            "Run `python scripts/bootstrap_pairs.py --output-dir data/processed` and rename the"
+            " outputs to match the config (forward_reasoning.jsonl/backward_reasoning.jsonl)."
+        )
+        raise FileNotFoundError(
+            "Missing required dataset files: " + ", ".join(missing) + f". Hint: {hint}"
+        )
+
     examples = join_forward_backward(
-        cfg.data.forward_dataset_path,
-        cfg.data.backward_dataset_path,
+        forward_path,
+        backward_path,
         forward_weight=cfg.dpo.forward_weight,
         backward_weight=cfg.dpo.backward_weight,
     )

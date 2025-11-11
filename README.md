@@ -67,13 +67,21 @@ project combines these lines of work to assess the following hypotheses:
    ```bash
    python scripts/download_model.py meta-llama/Meta-Llama-3.1-8B-Instruct
    ```
-5. **Kick off training**
+5. **Generate preference data** – produces forward/backward traces that training expects.
+   ```bash
+   python scripts/bootstrap_pairs.py --output-dir data/processed --limit 2000
+   mv data/processed/forward.jsonl data/processed/forward_reasoning.jsonl
+   mv data/processed/backward.jsonl data/processed/backward_reasoning.jsonl
+   ```
+   Tweak `--limit` or dataset arguments as needed; larger values increase training time and disk
+   usage. The `mv` commands align filenames with the default config paths.
+6. **Kick off training**
    ```bash
    python scripts/train_dpo.py configs/dpo_hybrid.yaml
    ```
    - Choose a device explicitly with `--device gpu` (default auto-detects) or `--device cpu` for
      laptop debugging.
-6. **Evaluate**
+7. **Evaluate**
    ```bash
    python scripts/eval_reasoning.py configs/eval_gsm8k.yaml
    ```

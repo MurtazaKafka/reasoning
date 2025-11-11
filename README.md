@@ -1,0 +1,108 @@
+# Forward-Backward Reasoning with DPO on LLaMA 3.1 8B
+
+This project investigates whether augmenting a base large language model with
+explicit backward reasoning objectives in a Direct Preference Optimization (DPO)
+alignment loop improves its reasoning reliability. The work targets Meta's LLaMA
+3.1 8B model and studies its behavior on math and general reasoning benchmarks
+when trained to produce both forward (problem → answer) and backward (answer →
+problem validation) rationales.
+
+## Research Motivation
+
+Recent research (e.g., Jiang et al., 2024; Liu et al., 2024; Chen et al., 2025)
+shows that reverse or bidirectional reasoning can reduce hallucinations by adding
+consistency checks. Preference-optimization methods such as DPO (Rafailov et al.,
+2024) and its step-wise variant Step-DPO (Lai et al., 2024) demonstrate that fine-
+scale preference signals can teach models to favor valid reasoning chains. This
+project combines these lines of work to assess the following hypotheses:
+
+1. **Backward verification reduces hallucinations** — integrating backward
+   reasoning signals encourages the model to acknowledge incorrect forward
+   solutions instead of fabricating justifications.
+2. **Hybrid forward/backward objectives boost accuracy** — coupling forward
+   chain-of-thought with backward validation should yield higher benchmark scores
+   than forward-only DPO.
+
+## Project Layout
+
+```
+├── configs/                # Experiment YAML configurations
+├── data/                   # Local caches for datasets and prompts
+├── scripts/                # CLI entry points for download, training, eval
+├── src/reasoning_lab/      # Core Python package with pipelines and utils
+├── tests/                  # Smoke tests for configuration and utilities
+└── README.md
+```
+
+## Planned Workflow
+
+1. **Download & prepare** Meta LLaMA 3.1 8B weights locally using a Hugging Face
+   token (user provided).
+2. **Construct reasoning data** that pairs forward solutions with backward
+   verification prompts. The plan leverages FOBAR-style templates and RevThink
+   data augmentation.
+3. **Train with DPO variants** comparing forward-only, backward-only, and
+   hybrid objectives. Implement support for both sample-level and step-level
+   preferences.
+4. **Evaluate on reasoning benchmarks** (GSM8K, MATH, ARC-Challenge, TruthfulQA)
+   and track hallucination acknowledgement metrics using automated validators.
+5. **Analyze results** to quantify gains from backward reasoning and generate
+   reproducible reports.
+
+## Getting Started
+
+1. **Install dependencies**
+   ```bash
+   pip install -e .
+   ```
+2. **Copy the environment template and insert your secrets**
+   ```bash
+   cp configs/env.example .env
+   ```
+   Update `.env` with your Hugging Face token (keep it private—`.gitignore` prevents committing).
+3. **Load the environment** – shells that support `.env` automatically are covered by the CLIs via
+   [`python-dotenv`](https://saurabh-kumar.com/python-dotenv/), but you can also run `source .env`
+   before launching any script for clarity.
+4. **Download the base checkpoint**
+   ```bash
+   python scripts/download_model.py meta-llama/Meta-Llama-3.1-8B-Instruct
+   ```
+5. **Kick off training**
+   ```bash
+   python scripts/train_dpo.py configs/dpo_hybrid.yaml
+   ```
+   - Choose a device explicitly with `--device gpu` (default auto-detects) or `--device cpu` for
+     laptop debugging.
+6. **Evaluate**
+   ```bash
+   python scripts/eval_reasoning.py configs/eval_gsm8k.yaml
+   ```
+
+Detailed instructions for each step appear in the documentation as the project progresses.
+
+## Environment & Secrets
+
+- `.env` is loaded automatically by every CLI entry point. Populate it with:
+  - `HF_TOKEN` / `HUGGING_FACE_HUB_TOKEN` – your Hugging Face token.
+  - `OUTPUT_DIR` – parent directory for checkpoints and logs (defaults to `./outputs`).
+  - Optional extras such as `WANDB_API_KEY`, `HF_HOME`, etc.
+- Keep `.env` out of version control; the repository ships with a `.gitignore` entry for safety.
+
+## Running on GPUs (A6000 cluster friendly)
+
+- **Local GPU box**: set `--device gpu` on the training CLI to prefer CUDA. Mixed precision honours
+  `experiment.mixed_precision` in the YAML config (`bf16` by default). If CUDA is unavailable, the
+  script falls back to CPU safely.
+- **CPU-only debugging**: run `python scripts/train_dpo.py ... --device cpu` to load the model in
+  float32 on the host without accelerating hardware.
+- **College Jupyter cluster (A6000)**:
+  1. Log in to the cluster and clone this repository in your workspace.
+  2. Create/activate a Python 3.10+ environment and run `pip install -e .`.
+  3. Upload your `.env` (or recreate it with the same values) and ensure file permissions restrict
+     access (`chmod 600 .env`).
+  4. Start Jupyter on the node with GPU access, open a terminal, and run `source .env` before the
+     training command.
+  5. Optionally run `accelerate config` to fine-tune distributed settings; the single-GPU default
+     works out of the box for an RTX A6000 (24 GB).
+- **Data/model location**: the download script writes to `models/…` by default, which is ignored by
+  git. Point `--destination` to a high-throughput filesystem on the cluster if available.

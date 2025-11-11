@@ -1,0 +1,25 @@
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual environments
+.venv/
+.envrc
+
+# Secrets and configs
+.env
+*.secret
+
+# Training outputs and checkpoints
+outputs/
+models/
+checkpoints/
+
+# Hugging Face caches
+.cache/
+python_cache/
+wandb/
+
+# OS metadata
+.DS_Store

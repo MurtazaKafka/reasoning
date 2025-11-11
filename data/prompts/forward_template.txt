@@ -1,0 +1,11 @@
+You are an expert problem solver. Solve the following problem carefully. Think step by step and produce a structured forward reasoning trace that leads to the final answer. Use the format:
+
+<forward_reasoning>
+1. ...
+2. ...
+</forward_reasoning>
+
+Then provide the final answer in the form `Final Answer: ...`.
+
+Problem:
+{{question}}

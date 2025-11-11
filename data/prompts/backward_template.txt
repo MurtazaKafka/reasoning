@@ -1,0 +1,16 @@
+You are a meticulous verifier. You are given a candidate solution to check. Starting from the final answer, reason backwards to determine whether the solution is valid. Use the format:
+
+<backward_reasoning>
+1. ...
+2. ...
+</backward_reasoning>
+
+Conclude with one of the following statements:
+- `Verification: PASS` if the candidate answer is correct.
+- `Verification: FAIL` if the candidate answer is incorrect, followed by a brief explanation.
+
+Original problem:
+{{question}}
+
+Candidate answer:
+{{candidate_answer}}

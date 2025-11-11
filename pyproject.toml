@@ -1,0 +1,53 @@
+[project]
+name = "reasoning-lab"
+version = "0.1.0"
+description = "Forward and backward reasoning experiments with DPO on LLaMA 3.1 8B"
+authors = [{ name = "Research Team" }]
+requires-python = ">=3.10"
+readme = "README.md"
+dependencies = [
+  "accelerate>=0.34.2",
+  "torch>=2.3.0",
+  "transformers>=4.43.0",
+  "trl>=0.9.6",
+  "datasets>=3.0.0",
+  "evaluate>=0.4.2",
+  "huggingface_hub>=0.24.5",
+  "bitsandbytes>=0.43.1; platform_system == 'Linux'",
+  "peft>=0.11.1",
+  "numpy>=1.26",
+  "pandas>=2.2",
+  "tqdm>=4.66",
+  "python-dotenv>=1.0",
+  "typer[all]>=0.12",
+  "omegaconf>=2.3",
+  "rich>=13.7",
+  "einops>=0.7",
+  "wandb>=0.16",
+  "scikit-learn>=1.4",
+  "texttable>=1.7"
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3",
+  "pytest-asyncio>=0.23",
+  "ruff>=0.6",
+  "mypy>=1.11",
+  "types-requests",
+  "types-psutil"
+]
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100

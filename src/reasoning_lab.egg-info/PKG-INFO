@@ -1,0 +1,97 @@
+Metadata-Version: 2.4
+Name: reasoning-lab
+Version: 0.1.0
+Summary: Forward and backward reasoning experiments with DPO on LLaMA 3.1 8B
+Author: Research Team
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: accelerate>=0.34.2
+Requires-Dist: torch>=2.3.0
+Requires-Dist: transformers>=4.43.0
+Requires-Dist: trl>=0.9.6
+Requires-Dist: datasets>=3.0.0
+Requires-Dist: evaluate>=0.4.2
+Requires-Dist: huggingface_hub>=0.24.5
+Requires-Dist: bitsandbytes>=0.43.1; platform_system == "Linux"
+Requires-Dist: peft>=0.11.1
+Requires-Dist: numpy>=1.26
+Requires-Dist: pandas>=2.2
+Requires-Dist: tqdm>=4.66
+Requires-Dist: python-dotenv>=1.0
+Requires-Dist: typer[all]>=0.12
+Requires-Dist: omegaconf>=2.3
+Requires-Dist: rich>=13.7
+Requires-Dist: einops>=0.7
+Requires-Dist: wandb>=0.16
+Requires-Dist: scikit-learn>=1.4
+Requires-Dist: texttable>=1.7
+Provides-Extra: dev
+Requires-Dist: pytest>=8.3; extra == "dev"
+Requires-Dist: pytest-asyncio>=0.23; extra == "dev"
+Requires-Dist: ruff>=0.6; extra == "dev"
+Requires-Dist: mypy>=1.11; extra == "dev"
+Requires-Dist: types-requests; extra == "dev"
+Requires-Dist: types-psutil; extra == "dev"
+
+# Forward-Backward Reasoning with DPO on LLaMA 3.1 8B
+
+This project investigates whether augmenting a base large language model with
+explicit backward reasoning objectives in a Direct Preference Optimization (DPO)
+alignment loop improves its reasoning reliability. The work targets Meta's LLaMA
+3.1 8B model and studies its behavior on math and general reasoning benchmarks
+when trained to produce both forward (problem → answer) and backward (answer →
+problem validation) rationales.
+
+## Research Motivation
+
+Recent research (e.g., Jiang et al., 2024; Liu et al., 2024; Chen et al., 2025)
+shows that reverse or bidirectional reasoning can reduce hallucinations by adding
+consistency checks. Preference-optimization methods such as DPO (Rafailov et al.,
+2024) and its step-wise variant Step-DPO (Lai et al., 2024) demonstrate that fine-
+scale preference signals can teach models to favor valid reasoning chains. This
+project combines these lines of work to assess the following hypotheses:
+
+1. **Backward verification reduces hallucinations** — integrating backward
+   reasoning signals encourages the model to acknowledge incorrect forward
+   solutions instead of fabricating justifications.
+2. **Hybrid forward/backward objectives boost accuracy** — coupling forward
+   chain-of-thought with backward validation should yield higher benchmark scores
+   than forward-only DPO.
+
+## Project Layout
+
+```
+├── configs/                # Experiment YAML configurations
+├── data/                   # Local caches for datasets and prompts
+├── scripts/                # CLI entry points for download, training, eval
+├── src/reasoning_lab/      # Core Python package with pipelines and utils
+├── tests/                  # Smoke tests for configuration and utilities
+└── README.md
+```
+
+## Planned Workflow
+
+1. **Download & prepare** Meta LLaMA 3.1 8B weights locally using a Hugging Face
+   token (user provided).
+2. **Construct reasoning data** that pairs forward solutions with backward
+   verification prompts. The plan leverages FOBAR-style templates and RevThink
+   data augmentation.
+3. **Train with DPO variants** comparing forward-only, backward-only, and
+   hybrid objectives. Implement support for both sample-level and step-level
+   preferences.
+4. **Evaluate on reasoning benchmarks** (GSM8K, MATH, ARC-Challenge, TruthfulQA)
+   and track hallucination acknowledgement metrics using automated validators.
+5. **Analyze results** to quantify gains from backward reasoning and generate
+   reproducible reports.
+
+## Getting Started
+
+- Install dependencies: `pip install -e .`
+- Configure environment variables (see `configs/env.example`) including the
+  Hugging Face token and output directories.
+- Run the download script: `python scripts/download_model.py --model-id meta-llama/Meta-Llama-3.1-8B-Instruct`
+- Launch training: `python scripts/train_dpo.py --config configs/dpo_hybrid.yaml`
+- Evaluate: `python scripts/eval_reasoning.py --config configs/eval_gsm8k.yaml`
+
+Detailed instructions for each step appear in the documentation as the project
+progresses.

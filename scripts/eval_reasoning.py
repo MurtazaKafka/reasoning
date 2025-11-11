@@ -9,6 +9,7 @@ from typing import Any, Callable, Dict, Iterable, List
 
 import typer
 from rich.console import Console
+from rich.progress import track
 from rich.table import Table
 
 from reasoning_lab.config import load_config
@@ -68,8 +69,8 @@ def main(
                 available = max_samples
             split = split.select(range(min(available, max_samples)))
 
-        samples = []
-        for example in console.track(split, description=f"{dataset_cfg.name} inference"):
+    samples = []
+    for example in track(split, description=f"{dataset_cfg.name} inference"):
             question = example.get("question") or example.get("input")
             answer = example.get("answer", "")
             outputs = reasoner.generate(question)

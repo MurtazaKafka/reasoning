@@ -9,6 +9,7 @@ from typing import Any, Optional
 
 import typer
 from rich.console import Console
+from rich.progress import track
 
 from reasoning_lab.env import load_project_env
 from reasoning_lab.inference.dual_reasoner import DualReasoner
@@ -59,7 +60,7 @@ def main(
     with forward_path.open("w", encoding="utf-8") as fwd_f, backward_path.open(
         "w", encoding="utf-8"
     ) as bwd_f:
-        for idx, sample in enumerate(console.track(ds, description="Generating")):
+        for idx, sample in enumerate(track(ds, description="Generating")):
             question = sample.get("question") or sample.get("input")
             answer = sample.get("answer", "")
             outputs = reasoner.generate(question)

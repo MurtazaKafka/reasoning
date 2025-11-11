@@ -78,8 +78,12 @@ project combines these lines of work to assess the following hypotheses:
    ```bash
    python scripts/train_dpo.py configs/dpo_hybrid.yaml
    ```
-   - Choose a device explicitly with `--device gpu` (default auto-detects) or `--device cpu` for
-     laptop debugging.
+    - Choose a device explicitly with `--device gpu` (default auto-detects) or `--device cpu` for
+       laptop debugging.
+    - Optional speed-up: on Ampere/Ada/Hopper GPUs with CUDA ≥ 12 and PyTorch ≥ 2.2, install
+       [FlashAttention 2](https://github.com/Dao-AILab/flash-attention) via
+       `pip install flash-attn --no-build-isolation`. The trainer auto-detects the package and
+       enables FlashAttention; if it isn't present, training falls back to PyTorch's SDPA kernels.
 7. **Evaluate**
    ```bash
    python scripts/eval_reasoning.py configs/eval_gsm8k.yaml

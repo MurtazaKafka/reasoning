@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import importlib
+import importlib.util
 import os
 from pathlib import Path
 from typing import Optional
@@ -73,27 +75,71 @@ def _is_cpu_only(device_map) -> bool:
     return isinstance(device_map, dict) and set(device_map.values()) == {"cpu"}
 
 
+def _is_flash_attention_available() -> bool:
+    """Return True if flash-attn is installed and importable."""
+
+    spec = importlib.util.find_spec("flash_attn")
+    if spec is None:
+        return False
+    try:
+        importlib.import_module("flash_attn")
+        return True
+    except Exception:
+        return False
+
+
 def _resolve_attention_kwargs(cfg, *, allow_flash: bool) -> dict:
-    flash_pref = cfg.model.get("flash_attention")
+    flash_pref = cfg.model.get("flash_attention", "auto")
     if flash_pref is None:
         return {}
 
+    desired_impl: Optional[str] = None
+    explicit_request = False
+
     if isinstance(flash_pref, bool):
-        if not flash_pref or not allow_flash:
+        explicit_request = True
+        if flash_pref:
+            desired_impl = "flash_attention_2"
+    else:
+        value = str(flash_pref).strip().lower()
+        if value in {"off", "disable", "disabled", "none", "false"}:
             return {}
-        return {"attn_implementation": "flash_attention_2"}
+        if value in {"sdpa", "scaled_dot_product"}:
+            explicit_request = True
+            return {"attn_implementation": "sdpa"}
+        if value in {"eager", "standard"}:
+            explicit_request = True
+            return {"attn_implementation": "eager"}
+        if value in {"flash", "flash2", "flash_attention", "flash_attention_2"}:
+            explicit_request = True
+            desired_impl = "flash_attention_2"
+        elif value not in {"auto", ""}:
+            console.log(f"[yellow]Unknown flash_attention value '{value}'; defaulting to auto.[/yellow]")
 
-    value = str(flash_pref).strip().lower()
-    if value in {"off", "disable", "disabled", "none", "false"}:
-        return {}
-    if value in {"sdpa", "scaled_dot_product"}:
+    if desired_impl == "flash_attention_2":
+        if not allow_flash:
+            if explicit_request:
+                console.log(
+                    "[yellow]FlashAttention requested but the current run is CPU-only. Falling back to SDPA.[/yellow]"
+                )
+            return {"attn_implementation": "sdpa"} if explicit_request else {}
+
+        if _is_flash_attention_available():
+            return {"attn_implementation": "flash_attention_2"}
+
+        install_hint = (
+            "pip install flash-attn --no-build-isolation"
+            "  # requires CUDA 12+, compatible GPU, PyTorch 2.2+"
+        )
+        console.log(
+            "[yellow]FlashAttention requested but the optional 'flash_attn' package isn't installed. "
+            f"Falling back to SDPA. Install via: {install_hint}[/yellow]"
+        )
         return {"attn_implementation": "sdpa"}
-    if value in {"eager", "standard"}:
-        return {"attn_implementation": "eager"}
 
-    # Default to flash attention when permitted.
-    if allow_flash:
+    if allow_flash and _is_flash_attention_available():
         return {"attn_implementation": "flash_attention_2"}
+
     return {}
 
 
@@ -120,7 +166,6 @@ def _build_model_load_kwargs(cfg, *, device_map, torch_dtype, include_quantizati
         )
 
     return load_kwargs
-
 
 def _create_model(cfg, tokenizer, *, device_map, torch_dtype):
     load_kwargs = _build_model_load_kwargs(

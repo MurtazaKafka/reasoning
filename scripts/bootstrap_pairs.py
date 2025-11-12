@@ -27,9 +27,38 @@ def main(
     split: str = typer.Option("train", help="Dataset split to use."),
     limit: Optional[int] = typer.Option(None, help="Optionally limit number of samples."),
     teacher_model: str = typer.Option(
-        "meta-llama/Meta-Llama-3.1-70B-Instruct",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct",
         help="Teacher model for generating forward/backward traces.",
     ),
+    torch_dtype: str = typer.Option(
+        "auto",
+        help="Torch dtype for the teacher model (auto, bf16, fp16, float32).",
+    ),
+    device_map: str = typer.Option("auto", help="Device placement strategy (auto, cpu, cuda:0, …)."),
+    load_in_8bit: bool = typer.Option(
+        False,
+        help="Load the teacher in 8-bit (requires bitsandbytes on Linux).",
+    ),
+    load_in_4bit: bool = typer.Option(
+        False,
+        help="Load the teacher in 4-bit (requires bitsandbytes on Linux).",
+    ),
+    attn_implementation: Optional[str] = typer.Option(
+        None,
+        help="Override attention implementation (e.g., sdpa, flash_attention_2).",
+    ),
+    max_forward_tokens: int = typer.Option(
+        384,
+        help="Maximum tokens to generate for the forward reasoning trace.",
+    ),
+    max_backward_tokens: int = typer.Option(
+        192,
+        help="Maximum tokens to generate for the backward reasoning trace.",
+    ),
+    forward_temperature: float = typer.Option(0.7, help="Sampling temperature for forward reasoning."),
+    forward_top_p: float = typer.Option(0.95, help="Nucleus sampling top-p for forward reasoning."),
+    backward_temperature: float = typer.Option(0.3, help="Sampling temperature for backward reasoning."),
+    backward_top_p: float = typer.Option(0.9, help="Nucleus sampling top-p for backward reasoning."),
     output_dir: Path = typer.Option(Path("data/augmented"), help="Where to write JSONL files."),
     hf_token_env: str = typer.Option("HF_TOKEN", help="Environment variable with HF token."),
     forward_filename: str = typer.Option(
@@ -43,7 +72,27 @@ def main(
     from datasets import load_dataset
 
     token = os.getenv(hf_token_env)
-    reasoner = DualReasoner(teacher_model, hf_token=token)
+    reasoner = DualReasoner(
+        teacher_model,
+        hf_token=token,
+        torch_dtype=torch_dtype,
+        device_map=device_map,
+        load_in_8bit=load_in_8bit,
+        load_in_4bit=load_in_4bit,
+        attn_implementation=attn_implementation,
+        max_forward_tokens=max_forward_tokens,
+        max_backward_tokens=max_backward_tokens,
+        forward_sampling={
+            "temperature": forward_temperature,
+            "top_p": forward_top_p,
+            "do_sample": forward_temperature > 0,
+        },
+        backward_sampling={
+            "temperature": backward_temperature,
+            "top_p": backward_top_p,
+            "do_sample": backward_temperature > 0,
+        },
+    )
 
     load_kwargs = {}
     if dataset_config:

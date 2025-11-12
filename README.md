@@ -71,9 +71,14 @@ project combines these lines of work to assess the following hypotheses:
    ```bash
    python scripts/bootstrap_pairs.py --dataset-config main --output-dir data/processed --limit 2000
    ```
-   This creates `data/processed/forward_reasoning.jsonl` and `data/processed/backward_reasoning.jsonl`
-   by default. Adjust `--limit`, `--dataset-config`, or the optional filename flags if you want to
-   target a different subset or storage layout.
+   By default the script now loads the lighter `meta-llama/Meta-Llama-3.1-8B-Instruct` checkpoint so
+   that you can bootstrap quickly on consumer GPUs. Pass `--teacher-model meta-llama/Meta-Llama-3.1-70B-Instruct`
+   if you want the larger teacher instead. For extra memory savings, add `--load-in-8bit` (or `--load-in-4bit`
+   on Linux with bitsandbytes installed) and tweak generation lengths such as
+   `--max-forward-tokens 320 --max-backward-tokens 160`. This command creates
+   `data/processed/forward_reasoning.jsonl` and `data/processed/backward_reasoning.jsonl` by default.
+   Adjust `--limit`, `--dataset-config`, or the optional filename flags if you want to target a different
+   subset or storage layout.
 6. **Kick off training**
    ```bash
    python scripts/train_dpo.py configs/dpo_hybrid.yaml

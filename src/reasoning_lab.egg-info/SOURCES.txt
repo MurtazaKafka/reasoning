@@ -2,11 +2,15 @@ README.md
 pyproject.toml
 src/reasoning_lab/__init__.py
 src/reasoning_lab/config.py
+src/reasoning_lab/env.py
 src/reasoning_lab.egg-info/PKG-INFO
 src/reasoning_lab.egg-info/SOURCES.txt
 src/reasoning_lab.egg-info/dependency_links.txt
 src/reasoning_lab.egg-info/requires.txt
 src/reasoning_lab.egg-info/top_level.txt
+src/reasoning_lab.egg-info/.ipynb_checkpoints/PKG-INFO-checkpoint
+src/reasoning_lab.egg-info/.ipynb_checkpoints/requires-checkpoint.txt
+src/reasoning_lab.egg-info/.ipynb_checkpoints/top_level-checkpoint.txt
 src/reasoning_lab/data/forward_backward_dataset.py
 src/reasoning_lab/inference/__init__.py
 src/reasoning_lab/inference/dual_reasoner.py

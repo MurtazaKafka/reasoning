@@ -43,7 +43,13 @@ def _env_resolver(key: Any, default: Any | None = None) -> Any:
     key_str = str(key)
     if key_str in os.environ:
         return os.environ[key_str]
-    return default
+    if default is not None:
+        return default
+
+    raise ValueError(
+        f"Environment variable '{key_str}' is required but not set. "
+        "Set it or provide a default in the config via ${env:VAR,default}."
+    )
 
 
 def _ensure_env_resolver() -> None:

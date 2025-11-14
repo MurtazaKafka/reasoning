@@ -9,11 +9,11 @@ from pathlib import Path
 from typing import Optional
 
 import typer
-from accelerate import Accelerator
 from datasets import Dataset
 from rich.console import Console
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer, TrainingArguments
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from trl.trainer.dpo_config import DPOConfig
 
 from reasoning_lab.config import load_config
 from reasoning_lab.data.forward_backward_dataset import join_forward_backward, to_dpo_dataset
@@ -226,7 +226,6 @@ def main(
     if isinstance(torch_dtype, str):
         torch_dtype = dtype_alias.get(torch_dtype.lower(), torch_dtype)
 
-    accelerator = Accelerator(cpu=use_cpu)
     console.log("Loading dataset...")
     dataset = _prepare_dataset(cfg)
     split = dataset.train_test_split(test_size=0.05, seed=cfg.experiment.seed)
@@ -253,14 +252,17 @@ def main(
     use_bf16 = cfg.experiment.mixed_precision == "bf16" and not use_cpu
     use_fp16 = cfg.experiment.mixed_precision == "fp16" and not use_cpu
 
-    training_args = TrainingArguments(
+    dpo_args = DPOConfig(
         output_dir=cfg.experiment.output_dir,
-        learning_rate=cfg.training.lr,
+        beta=cfg.dpo.beta,
+        label_smoothing=cfg.dpo.label_smoothing,
+        reference_free=cfg.dpo.reference_free,
         per_device_train_batch_size=cfg.data.batch_size_per_device,
         per_device_eval_batch_size=cfg.data.batch_size_per_device,
         gradient_accumulation_steps=cfg.data.gradient_accumulation_steps,
         num_train_epochs=cfg.training.num_train_epochs,
-        max_steps=cfg.training.max_steps,
+        max_steps=cfg.training.max_steps if cfg.training.max_steps is not None else -1,
+        learning_rate=cfg.training.lr,
         weight_decay=cfg.training.weight_decay,
         warmup_ratio=cfg.training.warmup_ratio,
         logging_strategy="steps",
@@ -272,28 +274,27 @@ def main(
         bf16=use_bf16,
         fp16=use_fp16,
         gradient_checkpointing=cfg.training.gradient_checkpointing,
-        ddp_find_unused_parameters=False,
         report_to=["wandb"],
         run_name=cfg.experiment.name,
         resume_from_checkpoint=resume_from or cfg.training.resume_from_checkpoint,
+        max_length=cfg.data.max_seq_length,
+        max_prompt_length=cfg.data.max_seq_length,
+        max_completion_length=cfg.data.max_seq_length,
+        loss_type=["sigmoid"],
+        use_weighting=True,
     )
 
     trainer = WeightedDPOTrainer(
         model=model,
         ref_model=ref_model,
-        beta=cfg.dpo.beta,
+        args=dpo_args,
         train_dataset=train_dataset,
         eval_dataset=eval_dataset,
-        tokenizer=tokenizer,
-        args=training_args,
-        loss_type="sigmoid",
-        max_length=cfg.data.max_seq_length,
-        max_prompt_length=cfg.data.max_seq_length,
-        max_target_length=cfg.data.max_seq_length,
+        processing_class=tokenizer,
     )
 
     console.log("Starting training...")
-    trainer.train(resume_from_checkpoint=resume_from)
+    trainer.train(resume_from_checkpoint=resume_from or cfg.training.resume_from_checkpoint)
     trainer.save_model(cfg.experiment.output_dir)
     tokenizer.save_pretrained(cfg.experiment.output_dir)
     console.log("[green]Training completed.[/green]")

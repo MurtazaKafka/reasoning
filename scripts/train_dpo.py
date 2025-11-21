@@ -5,6 +5,7 @@ from __future__ import annotations
 import importlib
 import importlib.util
 import os
+import sys
 from pathlib import Path
 from typing import Optional
 
@@ -14,6 +15,12 @@ from rich.console import Console
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from trl.trainer.dpo_config import DPOConfig
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+SRC_DIR = REPO_ROOT / "src"
+if str(SRC_DIR) not in sys.path:
+    sys.path.insert(0, str(SRC_DIR))
 
 from reasoning_lab.config import load_config
 from reasoning_lab.data.forward_backward_dataset import join_forward_backward, to_dpo_dataset
@@ -73,6 +80,30 @@ def _create_tokenizer(cfg):
 
 def _is_cpu_only(device_map) -> bool:
     return isinstance(device_map, dict) and set(device_map.values()) == {"cpu"}
+
+
+def _resolve_report_to(cfg) -> list[str]:
+    report_to = cfg.experiment.get("report_to", ["wandb"])
+    if isinstance(report_to, str):
+        report_to = [report_to]
+    if not isinstance(report_to, (list, tuple)):
+        console.log("[yellow]experiment.report_to must be a string or list; defaulting to [][/yellow]")
+        report_to = []
+
+    normalized: list[str] = []
+    for entry in report_to:
+        if not entry:
+            continue
+        normalized.append(str(entry))
+
+    if any(item.lower() == "wandb" for item in normalized):
+        try:
+            import wandb  # noqa: F401
+        except ImportError:
+            console.log("[yellow]wandb not installed; disabling Weights & Biases logging.[/yellow]")
+            normalized = [item for item in normalized if item.lower() != "wandb"]
+
+    return normalized
 
 
 def _is_flash_attention_available() -> bool:
@@ -149,6 +180,9 @@ def _build_model_load_kwargs(cfg, *, device_map, torch_dtype, include_quantizati
         "torch_dtype": torch_dtype,
         "device_map": device_map,
     }
+    # Prefer safetensors checkpoints when available to avoid torch.load security check requirements on older PyTorch versions.
+    if cfg.model.get("use_safetensors", True):
+        load_kwargs.setdefault("use_safetensors", True)
     load_kwargs.update(_resolve_attention_kwargs(cfg, allow_flash=allow_flash))
 
     if include_quantization and allow_flash:
@@ -291,7 +325,7 @@ def main(
         bf16=use_bf16,
         fp16=use_fp16,
         gradient_checkpointing=cfg.training.gradient_checkpointing,
-        report_to=["wandb"],
+    report_to=_resolve_report_to(cfg),
         run_name=cfg.experiment.name,
         resume_from_checkpoint=resume_from or cfg.training.resume_from_checkpoint,
         max_length=cfg.data.max_seq_length,

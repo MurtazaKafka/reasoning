@@ -1,0 +1,40 @@
+experiment:
+  name: tiny_dpo_debug
+  seed: 13
+  output_dir: ${env:OUTPUT_DIR}/runs/${experiment.name}
+  mixed_precision: fp32
+
+model:
+  base_model: sshleifer/tiny-gpt2
+  adapter: null
+  tokenizer_padding_side: left
+  trust_remote_code: false
+  flash_attention: off
+
+data:
+  forward_dataset_path: data/processed/forward_reasoning.jsonl
+  backward_dataset_path: data/processed/backward_reasoning.jsonl
+  max_seq_length: 512
+  batch_size_per_device: 1
+  gradient_accumulation_steps: 1
+
+training:
+  num_train_epochs: 0.01
+  max_steps: 5
+  gradient_checkpointing: false
+  lr: 5e-5
+  warmup_ratio: 0.0
+  weight_decay: 0.0
+  logging_steps: 1
+  eval_steps: 2
+  save_steps: 10
+  resume_from_checkpoint: null
+
+dpo:
+  beta: 0.1
+  label_smoothing: 0.0
+  reference_free: true
+  preference_source: forward-only
+  backward_weight: 0.0
+  forward_weight: 1.0
+

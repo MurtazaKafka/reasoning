@@ -167,12 +167,30 @@ def _build_model_load_kwargs(cfg, *, device_map, torch_dtype, include_quantizati
 
     return load_kwargs
 
+
+def _should_enable_quantization(cfg) -> bool:
+    wants_8bit = bool(cfg.model.get("load_in_8bit", False))
+    wants_4bit = bool(cfg.model.get("load_in_4bit", False))
+    if not (wants_8bit or wants_4bit):
+        return False
+
+    adapter_present = cfg.model.get("adapter") not in {None, "", "null"}
+    if adapter_present:
+        return True
+
+    console.log(
+        "[yellow]Quantized loading requested but no adapter is configured. "
+        "Full-precision loading will be used so the model can be fine-tuned without PEFT.[/yellow]"
+    )
+    return False
+
+
 def _create_model(cfg, tokenizer, *, device_map, torch_dtype):
     load_kwargs = _build_model_load_kwargs(
         cfg,
         device_map=device_map,
         torch_dtype=torch_dtype,
-        include_quantization=True,
+        include_quantization=_should_enable_quantization(cfg),
     )
     return AutoModelForCausalLM.from_pretrained(
         cfg.model.base_model,
@@ -217,7 +235,6 @@ def main(
 
     dtype_alias = {
         "bf16": torch.bfloat16,
-        "bfloat16": torch.bfloat16,
         "fp16": torch.float16,
         "float16": torch.float16,
         "float32": torch.float32,

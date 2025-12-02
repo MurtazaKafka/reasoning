@@ -97,11 +97,18 @@ def _resolve_report_to(cfg) -> list[str]:
         normalized.append(str(entry))
 
     if any(item.lower() == "wandb" for item in normalized):
-        try:
-            import wandb  # noqa: F401
-        except ImportError:
-            console.log("[yellow]wandb not installed; disabling Weights & Biases logging.[/yellow]")
+        # Check if wandb is disabled via environment variable
+        wandb_disabled_env = os.getenv("WANDB_DISABLED", "").upper()
+        if wandb_disabled_env in ("TRUE", "1", "YES"):
+            console.log("[yellow]WANDB_DISABLED is set; disabling Weights & Biases logging.[/yellow]")
             normalized = [item for item in normalized if item.lower() != "wandb"]
+        else:
+            # Check if wandb is installed
+            try:
+                import wandb  # noqa: F401
+            except ImportError:
+                console.log("[yellow]wandb not installed; disabling Weights & Biases logging.[/yellow]")
+                normalized = [item for item in normalized if item.lower() != "wandb"]
 
     return normalized
 

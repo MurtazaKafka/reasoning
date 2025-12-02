@@ -36,7 +36,7 @@ training:
 dpo:
   beta: 0.1
   label_smoothing: 0.0
-  reference_free: false
+  reference_free: true 
   preference_source: hybrid # options: forward-only, backward-only, hybrid
   backward_weight: 0.4
   forward_weight: 0.6

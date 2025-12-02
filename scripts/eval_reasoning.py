@@ -69,8 +69,8 @@ def main(
                 available = max_samples
             split = split.select(range(min(available, max_samples)))
 
-    samples = []
-    for example in track(split, description=f"{dataset_cfg.name} inference"):
+        samples = []
+        for example in track(split, description=f"{dataset_cfg.name} inference"):
             question = example.get("question") or example.get("input")
             answer = example.get("answer", "")
             outputs = reasoner.generate(question)

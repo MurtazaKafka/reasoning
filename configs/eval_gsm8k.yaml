@@ -6,8 +6,9 @@ experiment:
 model:
   # Base model to load (required for LoRA checkpoints)
   base_model: meta-llama/Meta-Llama-3.1-8B-Instruct
-  # Path to LoRA adapter checkpoint (optional - if omitted, uses base_model only)
-  adapter_path: ${env:OUTPUT_DIR}/runs/llama31_8b_forward_backward_dpo/checkpoint-200
+  # Path to LoRA adapter checkpoint - try the main dir first (final save), 
+  # or use checkpoint-200 if training didn't complete
+  adapter_path: ${env:OUTPUT_DIR}/runs/llama31_8b_forward_backward_dpo
   dtype: bf16
   load_in_8bit: true
 

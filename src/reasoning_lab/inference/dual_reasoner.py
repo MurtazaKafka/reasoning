@@ -102,6 +102,19 @@ class DualReasoner:
                 raise ImportError(
                     "peft is required to load LoRA adapters. Install it with: pip install peft"
                 )
+            # Validate adapter checkpoint exists and has required files
+            adapter_config_path = Path(adapter_path) / "adapter_config.json"
+            if not adapter_config_path.exists():
+                raise FileNotFoundError(
+                    f"LoRA adapter config not found at {adapter_config_path}. "
+                    "The checkpoint may be incomplete or corrupted."
+                )
+            if adapter_config_path.stat().st_size == 0:
+                raise ValueError(
+                    f"LoRA adapter config at {adapter_config_path} is empty. "
+                    "The checkpoint may have been corrupted during save. "
+                    "Please re-run training to generate a valid checkpoint."
+                )
             print(f"Loading LoRA adapter from: {adapter_path}")
             self.model = PeftModel.from_pretrained(self.model, adapter_path)
             # Optionally merge for faster inference (if not using quantization)

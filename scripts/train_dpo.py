@@ -15,6 +15,7 @@ from rich.console import Console
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from trl.trainer.dpo_config import DPOConfig
+from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -226,6 +227,19 @@ def _should_enable_quantization(cfg) -> bool:
     return False
 
 
+def _create_lora_config(cfg):
+    """Create LoRA configuration from config or defaults."""
+    lora_cfg = cfg.get("lora", {})
+    return LoraConfig(
+        r=lora_cfg.get("r", 16),
+        lora_alpha=lora_cfg.get("alpha", 32),
+        lora_dropout=lora_cfg.get("dropout", 0.05),
+        target_modules=lora_cfg.get("target_modules", ["q_proj", "k_proj", "v_proj", "o_proj"]),
+        bias="none",
+        task_type="CAUSAL_LM",
+    )
+
+
 def _create_model(cfg, tokenizer, *, device_map, torch_dtype):
     load_kwargs = _build_model_load_kwargs(
         cfg,
@@ -233,11 +247,23 @@ def _create_model(cfg, tokenizer, *, device_map, torch_dtype):
         torch_dtype=torch_dtype,
         include_quantization=_should_enable_quantization(cfg),
     )
-    return AutoModelForCausalLM.from_pretrained(
+    model = AutoModelForCausalLM.from_pretrained(
         cfg.model.base_model,
         trust_remote_code=cfg.model.get("trust_remote_code", False),
         **load_kwargs,
     )
+    
+    # Apply LoRA if adapter is configured or if using quantization
+    use_lora = cfg.model.get("adapter") == "lora" or cfg.get("lora", {}).get("enabled", False)
+    if use_lora or _should_enable_quantization(cfg):
+        console.log("[cyan]Applying LoRA adapter for memory-efficient training...[/cyan]")
+        if load_kwargs.get("load_in_8bit") or load_kwargs.get("load_in_4bit"):
+            model = prepare_model_for_kbit_training(model)
+        lora_config = _create_lora_config(cfg)
+        model = get_peft_model(model, lora_config)
+        model.print_trainable_parameters()
+    
+    return model
 
 
 @app.command()

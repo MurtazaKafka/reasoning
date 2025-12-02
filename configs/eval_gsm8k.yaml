@@ -4,8 +4,12 @@ experiment:
   output_dir: ${env:OUTPUT_DIR}/evals/${experiment.name}
 
 model:
-  checkpoint_path: ${env:OUTPUT_DIR}/runs/llama31_8b_forward_backward_dpo/checkpoint-last
+  # Base model to load (required for LoRA checkpoints)
+  base_model: meta-llama/Meta-Llama-3.1-8B-Instruct
+  # Path to LoRA adapter checkpoint (optional - if omitted, uses base_model only)
+  adapter_path: ${env:OUTPUT_DIR}/runs/llama31_8b_forward_backward_dpo/checkpoint-200
   dtype: bf16
+  load_in_8bit: true
 
 inference:
   max_new_tokens: 1024

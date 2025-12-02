@@ -47,10 +47,17 @@ def main(
     if hf_token_env in os.environ:
         token = os.environ[hf_token_env]
 
+    # Support both old (checkpoint_path) and new (base_model + adapter_path) config styles
+    model_path = cfg.model.get("base_model") or cfg.model.get("checkpoint_path")
+    adapter_path = cfg.model.get("adapter_path")
+
     reasoner = DualReasoner(
-        cfg.model.checkpoint_path,
+        model_path,
+        adapter_path=adapter_path,
         hf_token=token,
         torch_dtype=cfg.model.get("dtype", "bf16"),
+        load_in_8bit=cfg.model.get("load_in_8bit", False),
+        load_in_4bit=cfg.model.get("load_in_4bit", False),
     )
 
     all_results: Dict[str, List[MetricResult]] = {}

@@ -18,6 +18,11 @@ try:  # Optional dependency; available when bitsandbytes is installed.
 except ImportError:  # pragma: no cover - executed when bitsandbytes absent.
     BitsAndBytesConfig = None  # type: ignore[assignment]
 
+try:  # Optional dependency; available when peft is installed.
+    from peft import PeftModel
+except ImportError:  # pragma: no cover - executed when peft absent.
+    PeftModel = None  # type: ignore[assignment]
+
 
 def _is_local_path(path: str) -> bool:
     """Check if path is a local filesystem path vs HuggingFace repo ID."""
@@ -38,6 +43,7 @@ class DualReasoner:
         self,
         model_name_or_path: str,
         *,
+        adapter_path: Optional[str] = None,
         device_map: str | Dict[str, Any] | None = "auto",
         torch_dtype: str | torch.dtype | None = "auto",
         hf_token: Optional[str] = None,
@@ -89,6 +95,20 @@ class DualReasoner:
             model_name_or_path,
             **model_kwargs,
         )
+
+        # Load LoRA adapter if provided
+        if adapter_path:
+            if PeftModel is None:
+                raise ImportError(
+                    "peft is required to load LoRA adapters. Install it with: pip install peft"
+                )
+            print(f"Loading LoRA adapter from: {adapter_path}")
+            self.model = PeftModel.from_pretrained(self.model, adapter_path)
+            # Optionally merge for faster inference (if not using quantization)
+            if not (load_in_8bit or load_in_4bit):
+                print("Merging LoRA weights into base model...")
+                self.model = self.model.merge_and_unload()
+
         self.model.eval()
         self._device = self._infer_primary_device()
 

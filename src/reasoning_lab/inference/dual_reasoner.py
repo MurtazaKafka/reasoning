@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import os
 import warnings
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any, Dict, Optional
 
 import torch
@@ -15,6 +17,11 @@ try:  # Optional dependency; available when bitsandbytes is installed.
     from transformers import BitsAndBytesConfig
 except ImportError:  # pragma: no cover - executed when bitsandbytes absent.
     BitsAndBytesConfig = None  # type: ignore[assignment]
+
+
+def _is_local_path(path: str) -> bool:
+    """Check if path is a local filesystem path vs HuggingFace repo ID."""
+    return os.path.exists(path) or path.startswith((".", "/", "~"))
 
 
 @dataclass
@@ -45,10 +52,15 @@ class DualReasoner:
         if load_in_4bit and load_in_8bit:
             raise ValueError("Choose only one of load_in_4bit or load_in_8bit.")
 
+        # Only pass token for remote HuggingFace repos, not local paths
+        is_local = _is_local_path(model_name_or_path)
+        token_arg = None if is_local else hf_token
+
         self.tokenizer = AutoTokenizer.from_pretrained(
             model_name_or_path,
-            token=hf_token,
+            token=token_arg,
             use_fast=True,
+            local_files_only=is_local,
         )
         if self.tokenizer.pad_token is None:
             self.tokenizer.pad_token = self.tokenizer.eos_token
@@ -59,7 +71,8 @@ class DualReasoner:
         model_kwargs: Dict[str, Any] = {
             "device_map": device_map,
             "torch_dtype": resolved_dtype,
-            "token": hf_token,
+            "token": token_arg,
+            "local_files_only": is_local,
         }
 
         if attn_implementation:

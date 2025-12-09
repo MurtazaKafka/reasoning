@@ -230,11 +230,17 @@ def _should_enable_quantization(cfg) -> bool:
 def _create_lora_config(cfg):
     """Create LoRA configuration from config or defaults."""
     lora_cfg = cfg.get("lora", {})
+    
+    # Convert OmegaConf ListConfig to regular Python list to avoid JSON serialization issues
+    target_modules = lora_cfg.get("target_modules", ["q_proj", "k_proj", "v_proj", "o_proj"])
+    if hasattr(target_modules, "_iter_ex"):  # OmegaConf ListConfig check
+        target_modules = list(target_modules)
+    
     return LoraConfig(
         r=lora_cfg.get("r", 16),
         lora_alpha=lora_cfg.get("alpha", 32),
         lora_dropout=lora_cfg.get("dropout", 0.05),
-        target_modules=lora_cfg.get("target_modules", ["q_proj", "k_proj", "v_proj", "o_proj"]),
+        target_modules=target_modules,
         bias="none",
         task_type="CAUSAL_LM",
     )

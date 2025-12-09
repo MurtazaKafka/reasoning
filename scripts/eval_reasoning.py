@@ -37,12 +37,18 @@ _METRIC_REGISTRY: Dict[str, Callable[[Iterable[Dict[str, str]]], MetricResult]] 
 def main(
     config_path: Path = typer.Argument(..., help="Evaluation config path."),
     hf_token_env: str = typer.Option("HF_TOKEN", help="Env var with HF token."),
-    output_json: Path = typer.Option(Path("outputs/eval_results.json"), help="File to save metrics."),
+    output_json: Path = typer.Option(None, help="File to save metrics. Defaults to outputs/evals/<experiment_name>.json"),
 ) -> None:
     load_project_env()
     from datasets import load_dataset
 
     cfg: Any = load_config(config_path).raw
+    
+    # Set output path based on experiment name if not specified
+    if output_json is None:
+        exp_name = cfg.experiment.get("name", "eval_results")
+        output_json = Path(f"outputs/evals/{exp_name}.json")
+    
     token = None
     if hf_token_env in os.environ:
         token = os.environ[hf_token_env]

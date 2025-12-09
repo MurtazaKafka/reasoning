@@ -1,0 +1,42 @@
+# Baseline Evaluation Config
+# Evaluates the base Llama 3.1 8B Instruct model WITHOUT any DPO fine-tuning
+# This provides the baseline to compare against fine-tuned models
+
+experiment:
+  name: eval_gsm8k_baseline
+  seed: 123
+  output_dir: ${env:OUTPUT_DIR}/evals/${experiment.name}
+
+model:
+  # Base model only - no adapter
+  base_model: meta-llama/Meta-Llama-3.1-8B-Instruct
+  # adapter_path: null  # No adapter for baseline
+  dtype: bf16
+  load_in_8bit: true
+
+inference:
+  max_new_tokens: 1024
+  temperature: 0.6
+  top_p: 0.95
+  do_sample: true
+  forward_reasoning_prompt: prompts/forward_template.txt
+  backward_reasoning_prompt: prompts/backward_template.txt
+  num_backward_passes: 2
+  majority_vote: true
+
+metrics:
+  - name: accuracy
+    type: exact_match
+  - name: self_consistency
+    type: diversity
+  - name: acknowledgement_rate
+    type: backward_self_assess
+
+datasets:
+  - name: gsm8k
+    split: test
+    path: openai/gsm8k
+    subset: main
+    # For quick testing, use few_shot_k: 50
+    # For full eval, comment out or remove this line
+    few_shot_k: 100

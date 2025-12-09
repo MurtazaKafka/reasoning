@@ -40,7 +40,7 @@ def _prepare_dataset(cfg) -> Dataset:
     forward_path = Path(cfg.data.forward_dataset_path)
     backward_path = Path(cfg.data.backward_dataset_path)
 
-    missing = [str(p) for p in (forward_path, backward_path) if not Path(p).exists()]
+    missing = [str(p) for p in (forward_path, backward_path) if not p.exists()]
     if missing:
         hint = (
             "Run `python scripts/bootstrap_pairs.py --output-dir data/processed` and rename the"

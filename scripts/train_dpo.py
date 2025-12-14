@@ -229,24 +229,15 @@ def _should_enable_quantization(cfg) -> bool:
 
 def _create_lora_config(cfg):
     """Create LoRA configuration from config or defaults."""
-    from omegaconf import OmegaConf
-    
-    lora_cfg = cfg.get("lora", {})
-    
-    # Convert OmegaConf to native Python types to avoid JSON serialization issues
-    if OmegaConf.is_config(lora_cfg):
-        lora_cfg = OmegaConf.to_container(lora_cfg, resolve=True)
-    
-    target_modules = lora_cfg.get("target_modules", ["q_proj", "k_proj", "v_proj", "o_proj"])
-    # Ensure it's a plain Python list (not tuple or other)
-    if not isinstance(target_modules, list):
-        target_modules = list(target_modules)
-    
+    from reasoning_lab.utils.oc_utils import ensure_native_lora_cfg
+
+    lora_cfg = ensure_native_lora_cfg(cfg.get("lora", {}))
+
     return LoraConfig(
-        r=int(lora_cfg.get("r", 16)),
-        lora_alpha=int(lora_cfg.get("alpha", 32)),
-        lora_dropout=float(lora_cfg.get("dropout", 0.05)),
-        target_modules=target_modules,
+        r=lora_cfg.get("r", 16),
+        lora_alpha=lora_cfg.get("alpha", 32),
+        lora_dropout=lora_cfg.get("dropout", 0.05),
+        target_modules=lora_cfg.get("target_modules", ["q_proj", "k_proj", "v_proj", "o_proj"]),
         bias="none",
         task_type="CAUSAL_LM",
     )

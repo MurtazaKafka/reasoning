@@ -1,0 +1,59 @@
+experiment:
+  name: llama31_8b_forward_only_dpo_smoke
+  seed: 42
+  output_dir: ${env:OUTPUT_DIR:-./outputs}/runs/${experiment.name}
+  mixed_precision: bf16
+
+model:
+  base_model: meta-llama/Meta-Llama-3.1-8B-Instruct
+  adapter: lora 
+  tokenizer_padding_side: left
+  trust_remote_code: false
+  load_in_8bit: true
+  flash_attention: auto
+
+lora:
+  enabled: true
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+
+data:
+  forward_dataset_path: data/processed/forward_reasoning.jsonl
+  backward_dataset_path: data/processed/backward_reasoning.jsonl
+  train_split: train
+  eval_split: validation
+  max_seq_length: 128
+  batch_size_per_device: 1
+  gradient_accumulation_steps: 1
+
+training:
+  num_train_epochs: 1.0
+  max_steps: 2
+  gradient_checkpointing: false
+  lr: 1e-5
+  warmup_ratio: 0.0
+  weight_decay: 0.0
+  logging_steps: 1
+  eval_steps: 1
+  save_steps: 1
+  resume_from_checkpoint: null
+
+dpo:
+  beta: 0.1
+  label_smoothing: 0.0
+  reference_free: true 
+  preference_source: forward-only
+  backward_weight: 0.0
+  forward_weight: 1.0
+  step_level: true
+  rejection_sampling: false
+
+evaluation:
+  tasks: []
+  max_samples_per_task: 2

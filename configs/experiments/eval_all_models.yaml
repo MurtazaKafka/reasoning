@@ -1,0 +1,87 @@
+# Comprehensive evaluation config for all trained models
+# Run this after training to generate results for the paper
+
+experiment:
+  name: comprehensive_eval
+  seed: 42
+  output_dir: ${env:OUTPUT_DIR,./outputs}/evals
+  max_samples_per_task: 500  # Set to null for full evaluation
+
+# Models to evaluate - each gets its own output file
+models:
+  - name: baseline
+    base_model: meta-llama/Meta-Llama-3.1-8B-Instruct
+    adapter_path: null
+    description: "Base LLaMA 3.1 8B (no fine-tuning)"
+
+  - name: forward_only
+    base_model: meta-llama/Meta-Llama-3.1-8B-Instruct
+    adapter_path: ${env:OUTPUT_DIR,./outputs}/runs/forward_only_dpo
+    description: "Forward-only DPO"
+
+  - name: backward_only
+    base_model: meta-llama/Meta-Llama-3.1-8B-Instruct
+    adapter_path: ${env:OUTPUT_DIR,./outputs}/runs/backward_only_dpo
+    description: "Backward-only DPO"
+
+  - name: hybrid_60_40
+    base_model: meta-llama/Meta-Llama-3.1-8B-Instruct
+    adapter_path: ${env:OUTPUT_DIR,./outputs}/runs/hybrid_60_40_dpo
+    description: "Hybrid 60/40 DPO (main)"
+
+  - name: hybrid_50_50
+    base_model: meta-llama/Meta-Llama-3.1-8B-Instruct
+    adapter_path: ${env:OUTPUT_DIR,./outputs}/runs/hybrid_50_50_dpo
+    description: "Hybrid 50/50 DPO (ablation)"
+
+  - name: hybrid_80_20
+    base_model: meta-llama/Meta-Llama-3.1-8B-Instruct
+    adapter_path: ${env:OUTPUT_DIR,./outputs}/runs/hybrid_80_20_dpo
+    description: "Hybrid 80/20 DPO (ablation)"
+
+# Inference settings
+inference:
+  dtype: bf16
+  load_in_8bit: true
+  max_new_tokens: 512
+  temperature: 0.0  # Greedy for reproducibility
+  do_sample: false
+
+# Metrics to compute
+metrics:
+  - name: accuracy
+    type: exact_match
+  - name: acknowledgement_rate
+    type: backward_self_assess
+  - name: false_positive_rate
+    type: backward_self_assess
+  - name: verification_calibration
+    type: backward_self_assess
+  - name: self_consistency
+    type: diversity
+
+# Datasets to evaluate on
+datasets:
+  - name: gsm8k
+    path: openai/gsm8k
+    subset: main
+    split: test
+    description: "Grade school math (1319 samples)"
+
+  - name: math_algebra
+    path: lighteval/MATH
+    subset: algebra
+    split: test
+    description: "MATH algebra subset"
+
+  - name: arc_challenge
+    path: allenai/ai2_arc
+    subset: ARC-Challenge
+    split: test
+    description: "ARC Challenge (1172 samples)"
+
+  - name: truthfulqa
+    path: truthfulqa/truthful_qa
+    subset: generation
+    split: validation
+    description: "TruthfulQA (817 samples)"

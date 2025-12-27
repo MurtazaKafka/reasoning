@@ -1,0 +1,64 @@
+# Hybrid 80/20: Forward-heavy ablation
+# Tests minimal backward signal
+
+experiment:
+  name: hybrid_80_20_dpo
+  seed: 42
+  output_dir: ${env:OUTPUT_DIR,./outputs}/runs/${experiment.name}
+  mixed_precision: bf16
+  report_to: ["wandb"]
+  description: "Hybrid DPO with 80% forward, 20% backward weighting (ablation)"
+
+model:
+  base_model: meta-llama/Meta-Llama-3.1-8B-Instruct
+  adapter: lora
+  tokenizer_padding_side: left
+  trust_remote_code: false
+  load_in_8bit: true
+  flash_attention: auto
+
+lora:
+  enabled: true
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+
+data:
+  dpo_pairs_path: data/processed/dpo_pairs.jsonl
+  forward_dataset_path: data/processed/forward_reasoning.jsonl
+  backward_dataset_path: data/processed/backward_reasoning.jsonl
+  max_seq_length: 512
+  batch_size_per_device: 1
+  gradient_accumulation_steps: 16
+
+training:
+  num_train_epochs: 1.0
+  max_steps: null
+  gradient_checkpointing: true
+  lr: 1e-5
+  warmup_ratio: 0.05
+  weight_decay: 0.01
+  logging_steps: 10
+  eval_steps: 100
+  save_steps: 200
+  resume_from_checkpoint: null
+
+dpo:
+  beta: 0.1
+  label_smoothing: 0.0
+  reference_free: true
+  preference_source: hybrid
+  forward_weight: 0.8
+  backward_weight: 0.2
+
+evaluation:
+  tasks:
+    - gsm8k
+    - math
+    - truthful_qa
+  max_samples_per_task: 500

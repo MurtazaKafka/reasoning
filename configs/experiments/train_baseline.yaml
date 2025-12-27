@@ -1,0 +1,21 @@
+# Baseline: No fine-tuning (just for evaluation reference)
+# This config is used to evaluate the base model without any DPO training
+
+experiment:
+  name: baseline_llama31_8b
+  seed: 42
+  output_dir: ${env:OUTPUT_DIR,./outputs}/runs/${experiment.name}
+  mixed_precision: bf16
+  description: "Base LLaMA 3.1 8B without fine-tuning (evaluation only)"
+
+model:
+  base_model: meta-llama/Meta-Llama-3.1-8B-Instruct
+  adapter: null  # No adapter for baseline
+  tokenizer_padding_side: left
+  trust_remote_code: false
+  load_in_8bit: true
+  flash_attention: auto
+
+# No training for baseline - this is just a reference configuration
+training:
+  skip: true

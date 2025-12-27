@@ -70,23 +70,71 @@ def test_normalize():
     assert normalize_numeric_answer("10.0") == "10"
 
 
+def test_fractions():
+    """Test fraction extraction and matching."""
+    # LaTeX frac
+    text = r"The answer is $\boxed{\frac{1}{2}}$"
+    result = extract_numeric_answer(text)
+    assert result == "0.5", f"Expected 0.5, got {result}"
+
+    # Plain fraction in boxed
+    text2 = r"\boxed{3/4}"
+    result2 = extract_numeric_answer(text2)
+    assert result2 == "0.75", f"Expected 0.75, got {result2}"
+
+    # Fraction matching
+    assert answers_match("0.5", "1/2")
+    assert answers_match("0.25", "1/4")
+
+
+def test_negative_numbers():
+    """Test negative number handling."""
+    text = "#### -42"
+    assert extract_numeric_answer(text) == "-42"
+
+    text2 = r"\boxed{-15}"
+    assert extract_numeric_answer(text2) == "-15"
+
+    assert answers_match("-42", "-42")
+    assert not answers_match("-42", "42")
+
+
+def test_floating_point_tolerance():
+    """Test floating point comparison tolerance."""
+    # Test that whole numbers with decimals match
+    assert answers_match("10.0", "10")
+    assert answers_match("42.00", "42")
+    # Test that clearly different numbers don't match
+    assert not answers_match("10.1", "10.2")
+    assert not answers_match("100", "101")
+
+
 if __name__ == "__main__":
     test_gsm8k_format()
     print("✓ GSM8K format extraction works")
-    
+
     test_boxed_format()
     print("✓ Boxed format extraction works")
-    
+
     test_answer_is_format()
     print("✓ 'Answer is' format extraction works")
-    
+
     test_final_answer_format()
     print("✓ 'Final Answer' format extraction works")
-    
+
     test_answers_match()
     print("✓ Answer matching works")
-    
+
     test_normalize()
     print("✓ Normalization works")
-    
+
+    test_fractions()
+    print("✓ Fraction extraction works")
+
+    test_negative_numbers()
+    print("✓ Negative number handling works")
+
+    test_floating_point_tolerance()
+    print("✓ Floating point tolerance works")
+
     print("\n✅ All tests passed!")

@@ -1,16 +1,15 @@
-You are a meticulous verifier. You are given a candidate solution to check. Starting from the final answer, reason backwards to determine whether the solution is valid. Use the format:
+You are a careful verifier. Given a problem and a candidate answer, verify whether the answer is correct by reasoning backwards from the answer.
 
-<backward_reasoning>
-1. ...
-2. ...
-</backward_reasoning>
+Problem: {question}
+Candidate Answer: {answer}
 
-Conclude with one of the following statements:
-- `Verification: PASS` if the candidate answer is correct.
-- `Verification: FAIL` if the candidate answer is incorrect, followed by a brief explanation.
+Verify the solution step by step. Check if:
+1. The answer makes sense given the problem constraints
+2. Working backwards from the answer leads to valid intermediate steps
+3. The final answer matches what the problem asks for
 
-Original problem:
-{{question}}
+Conclude with either:
+- Verification: PASS (if the answer is correct)
+- Verification: FAIL (if the answer is incorrect, explain why)
 
-Candidate answer:
-{{candidate_answer}}
+Verification:

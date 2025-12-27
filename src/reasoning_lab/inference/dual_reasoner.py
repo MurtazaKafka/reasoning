@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import os
 import warnings
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -24,16 +24,71 @@ except ImportError:  # pragma: no cover - executed when peft absent.
     PeftModel = None  # type: ignore[assignment]
 
 
+# Default prompt templates
+DEFAULT_FORWARD_PROMPT = """You are an expert problem solver. Solve the following problem step by step.
+Show your reasoning clearly, then provide the final answer.
+
+Problem: {question}
+
+Solution:"""
+
+DEFAULT_BACKWARD_PROMPT = """You are a careful verifier. Given a problem and a candidate answer, verify whether the answer is correct by reasoning backwards from the answer.
+
+Problem: {question}
+Candidate Answer: {answer}
+
+Verify the solution step by step, then conclude with either:
+- Verification: PASS (if the answer is correct)
+- Verification: FAIL (if the answer is incorrect)
+
+Verification:"""
+
+
 def _is_local_path(path: str) -> bool:
     """Check if path is a local filesystem path vs HuggingFace repo ID."""
     return os.path.exists(path) or path.startswith((".", "/", "~"))
 
 
+def _load_prompt_template(path: Optional[str | Path]) -> Optional[str]:
+    """Load a prompt template from file if it exists."""
+    if path is None:
+        return None
+    p = Path(path)
+    if p.exists():
+        return p.read_text(encoding="utf-8").strip()
+    return None
+
+
 @dataclass
 class ReasoningOutputs:
+    """Single forward/backward reasoning output."""
     forward_trace: str
     backward_trace: str
     verification: str
+    extracted_answer: str = ""
+
+
+@dataclass
+class MultiSampleOutputs:
+    """Multiple samples for self-consistency evaluation."""
+    question: str
+    samples: List[ReasoningOutputs] = field(default_factory=list)
+    majority_answer: str = ""
+    consistency_score: float = 0.0
+
+    def compute_majority(self) -> str:
+        """Compute majority vote answer from samples."""
+        if not self.samples:
+            return ""
+        answers = [s.extracted_answer for s in self.samples if s.extracted_answer]
+        if not answers:
+            return ""
+        from collections import Counter
+        counter = Counter(answers)
+        self.majority_answer = counter.most_common(1)[0][0]
+        # Consistency = fraction of samples agreeing with majority
+        self.consistency_score = counter[self.majority_answer] / len(answers)
+        return self.majority_answer
 
 
 class DualReasoner:
@@ -54,6 +109,8 @@ class DualReasoner:
         max_backward_tokens: int = 256,
         forward_sampling: Optional[Dict[str, Any]] = None,
         backward_sampling: Optional[Dict[str, Any]] = None,
+        forward_prompt_template: Optional[str] = None,
+        backward_prompt_template: Optional[str] = None,
     ) -> None:
         if load_in_4bit and load_in_8bit:
             raise ValueError("Choose only one of load_in_4bit or load_in_8bit.")
@@ -138,12 +195,33 @@ class DualReasoner:
             default_backward.update(backward_sampling)
         self.backward_sampling = default_backward
 
+        # Load or use default prompt templates
+        loaded_forward = _load_prompt_template(forward_prompt_template)
+        loaded_backward = _load_prompt_template(backward_prompt_template)
+        self.forward_template = loaded_forward or DEFAULT_FORWARD_PROMPT
+        self.backward_template = loaded_backward or DEFAULT_BACKWARD_PROMPT
+
     @torch.inference_mode()
-    def generate(self, question: str, *, candidate_answer: Optional[str] = None) -> ReasoningOutputs:
-        forward_prompt = (
-            "You are a deliberate mathematician. Solve the problem step by step before giving the final"
-            " answer. Problem:" f" {question}\n"
-        )
+    def generate(
+        self,
+        question: str,
+        *,
+        candidate_answer: Optional[str] = None,
+        skip_backward: bool = False,
+    ) -> ReasoningOutputs:
+        """Generate a single forward/backward reasoning pair.
+
+        Args:
+            question: The problem to solve.
+            candidate_answer: Optional pre-specified answer for backward verification.
+            skip_backward: If True, skip backward verification (faster for forward-only eval).
+
+        Returns:
+            ReasoningOutputs with forward trace, backward trace, and verification result.
+        """
+        # Format forward prompt
+        forward_prompt = self.forward_template.format(question=question)
+
         inputs = self._tokenize_to_device(forward_prompt)
         forward_output = self.model.generate(
             **inputs,
@@ -152,12 +230,21 @@ class DualReasoner:
         )
         forward_text = self.tokenizer.decode(forward_output[0], skip_special_tokens=True)
 
+        # Extract answer from forward trace
         final_answer = candidate_answer or extract_final_answer(forward_text)
 
-        backward_prompt = (
-            "You are a verifier. Starting with the candidate answer, reason backwards to confirm the"
-            " solution. Report `Verification: PASS` or `Verification: FAIL`. Problem: "
-            f"{question}\nCandidate Answer: {final_answer}"
+        if skip_backward:
+            return ReasoningOutputs(
+                forward_trace=forward_text,
+                backward_trace="",
+                verification="Verification: SKIPPED",
+                extracted_answer=final_answer,
+            )
+
+        # Format backward prompt
+        backward_prompt = self.backward_template.format(
+            question=question,
+            answer=final_answer,
         )
         backward_inputs = self._tokenize_to_device(backward_prompt)
         backward_output = self.model.generate(
@@ -173,7 +260,77 @@ class DualReasoner:
             forward_trace=forward_text,
             backward_trace=backward_text,
             verification=verification,
+            extracted_answer=final_answer,
         )
+
+    @torch.inference_mode()
+    def generate_multiple(
+        self,
+        question: str,
+        *,
+        num_samples: int = 5,
+        skip_backward: bool = False,
+    ) -> MultiSampleOutputs:
+        """Generate multiple samples for self-consistency evaluation.
+
+        Args:
+            question: The problem to solve.
+            num_samples: Number of independent samples to generate.
+            skip_backward: If True, skip backward verification for speed.
+
+        Returns:
+            MultiSampleOutputs with all samples and majority vote answer.
+        """
+        result = MultiSampleOutputs(question=question)
+
+        for _ in range(num_samples):
+            sample = self.generate(question, skip_backward=skip_backward)
+            result.samples.append(sample)
+
+        result.compute_majority()
+        return result
+
+    @torch.inference_mode()
+    def generate_with_rejection_sampling(
+        self,
+        question: str,
+        ground_truth: str,
+        *,
+        max_attempts: int = 10,
+        require_correct: bool = True,
+        require_incorrect: bool = False,
+    ) -> Optional[ReasoningOutputs]:
+        """Generate a sample that matches the desired correctness criterion.
+
+        Useful for creating balanced DPO datasets with both correct and incorrect traces.
+
+        Args:
+            question: The problem to solve.
+            ground_truth: The correct answer for comparison.
+            max_attempts: Maximum generation attempts before giving up.
+            require_correct: If True, only return samples with correct answers.
+            require_incorrect: If True, only return samples with incorrect answers.
+
+        Returns:
+            ReasoningOutputs matching the criterion, or None if not found.
+        """
+        from reasoning_lab.utils.text import answers_match
+
+        if require_correct and require_incorrect:
+            raise ValueError("Cannot require both correct and incorrect simultaneously.")
+
+        for _ in range(max_attempts):
+            sample = self.generate(question)
+            is_correct = answers_match(sample.extracted_answer, ground_truth)
+
+            if require_correct and is_correct:
+                return sample
+            elif require_incorrect and not is_correct:
+                return sample
+            elif not require_correct and not require_incorrect:
+                return sample  # Return any sample
+
+        return None
 
     def _normalize_dtype(self, torch_dtype: str | torch.dtype | None) -> torch.dtype:
         if torch_dtype is None or torch_dtype == "auto":
@@ -242,4 +399,3 @@ class DualReasoner:
     def _tokenize_to_device(self, prompt: str) -> Dict[str, torch.Tensor]:
         inputs = self.tokenizer(prompt, return_tensors="pt")
         return {key: value.to(self._device) for key, value in inputs.items()}
-

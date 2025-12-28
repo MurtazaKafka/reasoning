@@ -1,0 +1,19 @@
+{
+  "completed_at": "2025-12-27T20:49:28.867760",
+  "elapsed_seconds": 13046.2743537426,
+  "results": {
+    "data_generation": false,
+    "training": {
+      "forward_only": true,
+      "backward_only": true,
+      "hybrid_60_40": true
+    },
+    "evaluation": {
+      "baseline": false,
+      "forward_only": false,
+      "backward_only": false,
+      "hybrid_60_40": false
+    },
+    "analysis": false
+  }
+}

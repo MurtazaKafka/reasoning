@@ -44,7 +44,7 @@ project combines these lines of work to assess the following hypotheses:
 3. **Train with DPO variants** comparing forward-only, backward-only, and
    hybrid objectives. Implement support for both sample-level and step-level
    preferences.
-4. **Evaluate on reasoning benchmarks** (GSM8K, MATH, ARC-Challenge, TruthfulQA)
+4. **Evaluate on reasoning benchmarks** (GSM8K)
    and track hallucination acknowledgement metrics using automated validators.
 5. **Analyze results** to quantify gains from backward reasoning and generate
    reproducible reports.

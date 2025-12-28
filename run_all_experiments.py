@@ -311,6 +311,7 @@ def stage_3_evaluate_models(
         cmd = [
             sys.executable,
             str(SCRIPT_DIR / "scripts" / "eval_reasoning.py"),
+            "main",  # Typer subcommand (required since script has multiple commands)
             str(temp_config),
             "--output-json", str(result_file),
             "--greedy",

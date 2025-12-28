@@ -297,7 +297,7 @@ class DualReasoner:
         ground_truth: str,
         *,
         max_attempts: int = 10,
-        require_correct: bool = True,
+        require_correct: bool = False,
         require_incorrect: bool = False,
     ) -> Optional[ReasoningOutputs]:
         """Generate a sample that matches the desired correctness criterion.

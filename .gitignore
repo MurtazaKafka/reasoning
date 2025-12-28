@@ -23,3 +23,9 @@ wandb/
 
 # OS metadata
 .DS_Store
+checkpoints/
+models/
+*.pt
+*.pth
+*.safetensors
+*.bin

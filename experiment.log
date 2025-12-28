@@ -1,209 +1,25 @@
 nohup: ignoring input
-17:12:02 | Logging to: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/logs/experiment_20251227_171202.log
-17:12:02 | ============================================================
-17:12:02 | FORWARD-BACKWARD REASONING EXPERIMENT PIPELINE
-17:12:02 | ============================================================
-17:12:02 | Output directory: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs
-17:12:02 | Training configs: ['forward_only', 'backward_only', 'hybrid_60_40']
-17:12:02 | Data limit: 2000
-17:12:02 | Eval samples: 500
-17:12:02 | ============================================================
-17:12:02 | STAGE 1: Data Generation
-17:12:02 | ============================================================
-17:12:02 | Running: /home/DAVIDSON/munikzad/.conda/envs/reasoning/bin/python /home/DAVIDSON/munikzad/csc224n/reasoning/scripts/generate_dpo_pairs.py --limit 2000 --output-dir /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/data --rejection-sampling --max-rejection-attempts 5
-17:13:49 | Command failed with code 1
-17:13:49 |   `torch_dtype` is deprecated! Use `dtype` instead!
-17:13:49 |   
-17:13:49 |   Fetching 4 files:   0%|                                                                                                 | 0/4 [00:00<?, ?it/s]
-17:13:49 |   Fetching 4 files:  25%|██████████████████████▎                                                                  | 1/4 [00:45<02:16, 45.55s/it]
-17:13:49 |   Fetching 4 files: 100%|█████████████████████████████████████████████████████████████████████████████████████████| 4/4 [00:45<00:00, 11.39s/it]
-17:13:49 |   
-17:13:49 |   Loading checkpoint shards:   0%|                                                                                        | 0/4 [00:00<?, ?it/s]
-17:13:49 |   Loading checkpoint shards:  25%|████████████████████                                                            | 1/4 [00:01<00:03,  1.25s/it]
-17:13:49 |   Loading checkpoint shards:  50%|████████████████████████████████████████                                        | 2/4 [00:02<00:02,  1.25s/it]
-17:13:49 |   Loading checkpoint shards:  75%|████████████████████████████████████████████████████████████                    | 3/4 [00:03<00:01,  1.24s/it]
-17:13:49 |   Loading checkpoint shards: 100%|████████████████████████████████████████████████████████████████████████████████| 4/4 [00:04<00:00,  1.16it/s]
-17:13:49 |   Loading checkpoint shards: 100%|████████████████████████████████████████████████████████████████████████████████| 4/4 [00:04<00:00,  1.00s/it]
-17:13:49 |   
-17:13:49 |   Generating train split:   0%|                                                                                 | 0/7473 [00:00<?, ? examples/s]
-17:13:49 |   Generating train split: 100%|██████████████████████████████████████████████████████████████████| 7473/7473 [00:00<00:00, 134668.24 examples/s]
-17:13:49 |   
-17:13:49 |   Generating test split:   0%|                                                                                  | 0/1319 [00:00<?, ? examples/s]
-17:13:49 |   Generating test split: 100%|███████████████████████████████████████████████████████████████████| 1319/1319 [00:00<00:00, 188166.63 examples/s]
-17:13:49 |   Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
-17:13:49 |   Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
-17:13:49 |   Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
-17:13:49 |   Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
-17:13:49 |   ╭───────────────────────────────────────────────────── Traceback (most recent call last) ─────────────────────────────────────────────────────╮
-17:13:49 |   │ /home/DAVIDSON/munikzad/csc224n/reasoning/scripts/generate_dpo_pairs.py:158 in main                                                         │
-17:13:49 |   │                                                                                                                                             │
-17:13:49 |   │   155 │   │   │   │                                                                                                                         │
-17:13:49 |   │   156 │   │   │   │   # Try to get an incorrect sample for better contrastive signal                                                        │
-17:13:49 |   │   157 │   │   │   │   if rejection_sampling and incorrect_sample is None:                                                                   │
-17:13:49 |   │ ❱ 158 │   │   │   │   │   incorrect_sample = reasoner.generate_with_rejection_sampling(                                                     │
-17:13:49 |   │   159 │   │   │   │   │   │   question,                                                                                                     │
-17:13:49 |   │   160 │   │   │   │   │   │   ground_truth,                                                                                                 │
-17:13:49 |   │   161 │   │   │   │   │   │   require_incorrect=True,                                                                                       │
-17:13:49 |   │                                                                                                                                             │
-17:13:49 |   │ ╭──────────────────────────────────────────────────────────────── locals ─────────────────────────────────────────────────────────────────╮ │
-17:13:49 |   │ │                      _ = 0                                                                                                              │ │
-17:13:49 |   │ │                 answer = 'Natalia sold 48/2 = <<48/2=24>>24 clips in May.\nNatalia sold 48+24 = <<48+24=72>'+46                         │ │
-17:13:49 |   │ │    attn_implementation = None                                                                                                           │ │
-17:13:49 |   │ │   backward_temperature = 0.3                                                                                                            │ │
-17:13:49 |   │ │      backward_template = None                                                                                                           │ │
-17:13:49 |   │ │           bwd_template = None                                                                                                           │ │
-17:13:49 |   │ │         correct_sample = ReasoningOutputs(                                                                                              │ │
-17:13:49 |   │ │                          │   forward_trace='You are an expert problem solver. Solve the following problem step by step.\nShow'+885,     │ │
-17:13:49 |   │ │                          │   backward_trace='You are a careful verifier. Given a problem and a candidate answer, verify wheth'+1496,    │ │
-17:13:49 |   │ │                          │   verification='Verification: PASS. The candidate answer is correct. Natalia sold 72 clips altog'+23,        │ │
-17:13:49 |   │ │                          │   extracted_answer='72'                                                                                      │ │
-17:13:49 |   │ │                          )                                                                                                              │ │
-17:13:49 |   │ │         dataset_config = 'main'                                                                                                         │ │
-17:13:49 |   │ │           dataset_name = 'openai/gsm8k'                                                                                                 │ │
-17:13:49 |   │ │             device_map = 'auto'                                                                                                         │ │
-17:13:49 |   │ │         dpo_pairs_path = PosixPath('/home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/data/dpo_pairs.jsonl')                 │ │
-17:13:49 |   │ │                     ds = Dataset({                                                                                                      │ │
-17:13:49 |   │ │                          │   features: ['question', 'answer'],                                                                          │ │
-17:13:49 |   │ │                          │   num_rows: 2000                                                                                             │ │
-17:13:49 |   │ │                          })                                                                                                             │ │
-17:13:49 |   │ │                      f = <_io.TextIOWrapper name='/home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/data/dpo_pairs.jsonl'    │ │
-17:13:49 |   │ │                          mode='w' encoding='utf-8'>                                                                                     │ │
-17:13:49 |   │ │    forward_temperature = 0.7                                                                                                            │ │
-17:13:49 |   │ │       forward_template = None                                                                                                           │ │
-17:13:49 |   │ │           fwd_template = None                                                                                                           │ │
-17:13:49 |   │ │           ground_truth = '72'                                                                                                           │ │
-17:13:49 |   │ │           hf_token_env = 'HF_TOKEN'                                                                                                     │ │
-17:13:49 |   │ │                    idx = 0                                                                                                              │ │
-17:13:49 |   │ │       incorrect_sample = None                                                                                                           │ │
-17:13:49 |   │ │                  limit = 2000                                                                                                           │ │
-17:13:49 |   │ │           load_in_4bit = False                                                                                                          │ │
-17:13:49 |   │ │           load_in_8bit = False                                                                                                          │ │
-17:13:49 |   │ │            load_kwargs = {'name': 'main'}                                                                                               │ │
-17:13:49 |   │ │    max_backward_tokens = 256                                                                                                            │ │
-17:13:49 |   │ │     max_forward_tokens = 512                                                                                                            │ │
-17:13:49 |   │ │ max_rejection_attempts = 5                                                                                                              │ │
-17:13:49 |   │ │             output_dir = PosixPath('/home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/data')                                 │ │
-17:13:49 |   │ │               question = 'Natalia sold clips to 48 of her friends in April, and then she sold half as many'+75                          │ │
-17:13:49 |   │ │               reasoner = <reasoning_lab.inference.dual_reasoner.DualReasoner object at 0x14590f050c20>                                  │ │
-17:13:49 |   │ │     rejection_sampling = True                                                                                                           │ │
-17:13:49 |   │ │                 sample = {                                                                                                              │ │
-17:13:49 |   │ │                          │   'question': 'Natalia sold clips to 48 of her friends in April, and then she sold half as many'+75,         │ │
-17:13:49 |   │ │                          │   'answer': 'Natalia sold 48/2 = <<48/2=24>>24 clips in May.\nNatalia sold 48+24 = <<48+24=72>'+46           │ │
-17:13:49 |   │ │                          }                                                                                                              │ │
-17:13:49 |   │ │   samples_per_question = 1                                                                                                              │ │
-17:13:49 |   │ │                  split = 'train'                                                                                                        │ │
-17:13:49 |   │ │                  stats = {                                                                                                              │ │
-17:13:49 |   │ │                          │   'total_questions': 1,                                                                                      │ │
-17:13:49 |   │ │                          │   'correct_traces': 0,                                                                                       │ │
-17:13:49 |   │ │                          │   'incorrect_traces': 0,                                                                                     │ │
-17:13:49 |   │ │                          │   'rejection_sampling_successes': 0,                                                                         │ │
-17:13:49 |   │ │                          │   'rejection_sampling_failures': 0,                                                                          │ │
-17:13:49 |   │ │                          │   'backward_calibrated': 0,                                                                                  │ │
-17:13:49 |   │ │                          │   'backward_miscalibrated': 0                                                                                │ │
-17:13:49 |   │ │                          }                                                                                                              │ │
-17:13:49 |   │ │             stats_path = PosixPath('/home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/data/generation_stats.json')           │ │
-17:13:49 |   │ │          teacher_model = 'meta-llama/Meta-Llama-3.1-8B-Instruct'                                                                        │ │
-17:13:49 |   │ │                  token = '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'                                                                        │ │
-17:13:49 |   │ │            torch_dtype = 'auto'                                                                                                         │ │
-17:13:49 |   │ ╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ │
-17:13:49 |   │                                                                                                                                             │
-17:13:49 |   │ /home/DAVIDSON/munikzad/.conda/envs/reasoning/lib/python3.13/site-packages/torch/utils/_contextlib.py:120 in decorate_context               │
-17:13:49 |   │                                                                                                                                             │
-17:13:49 |   │   117 │   @functools.wraps(func)                                                                                                            │
-17:13:49 |   │   118 │   def decorate_context(*args, **kwargs):                                                                                            │
-17:13:49 |   │   119 │   │   with ctx_factory():                                                                                                           │
-17:13:49 |   │ ❱ 120 │   │   │   return func(*args, **kwargs)                                                                                              │
-17:13:49 |   │   121 │                                                                                                                                     │
-17:13:49 |   │   122 │   return decorate_context                                                                                                           │
-17:13:49 |   │   123                                                                                                                                       │
-17:13:49 |   │                                                                                                                                             │
-17:13:49 |   │ ╭──────────────────────────────────────────────────────── locals ─────────────────────────────────────────────────────────╮                 │
-17:13:49 |   │ │        args = (                                                                                                         │                 │
-17:13:49 |   │ │               │   <reasoning_lab.inference.dual_reasoner.DualReasoner object at 0x14590f050c20>,                        │                 │
-17:13:49 |   │ │               │   'Natalia sold clips to 48 of her friends in April, and then she sold half as many'+75,                │                 │
-17:13:49 |   │ │               │   '72'                                                                                                  │                 │
-17:13:49 |   │ │               )                                                                                                         │                 │
-17:13:49 |   │ │ ctx_factory = <bound method inference_mode.clone of <torch.autograd.grad_mode.inference_mode object at 0x14590fb9d220>> │                 │
-17:13:49 |   │ │      kwargs = {'require_incorrect': True, 'max_attempts': 5}                                                            │                 │
-17:13:49 |   │ ╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                 │
-17:13:49 |   │                                                                                                                                             │
-17:13:49 |   │ /home/DAVIDSON/munikzad/csc224n/reasoning/src/reasoning_lab/inference/dual_reasoner.py:320 in generate_with_rejection_sampling              │
-17:13:49 |   │                                                                                                                                             │
-17:13:49 |   │   317 │   │   from reasoning_lab.utils.text import answers_match                                                                            │
-17:13:49 |   │   318 │   │                                                                                                                                 │
-17:13:49 |   │   319 │   │   if require_correct and require_incorrect:                                                                                     │
-17:13:49 |   │ ❱ 320 │   │   │   raise ValueError("Cannot require both correct and incorrect simultaneously."                                              │
-17:13:49 |   │   321 │   │                                                                                                                                 │
-17:13:49 |   │   322 │   │   for _ in range(max_attempts):                                                                                                 │
-17:13:49 |   │   323 │   │   │   sample = self.generate(question)                                                                                          │
-17:13:49 |   │                                                                                                                                             │
-17:13:49 |   │ ╭───────────────────────────────────────────────── locals ──────────────────────────────────────────────────╮                               │
-17:13:49 |   │ │      ground_truth = '72'                                                                                  │                               │
-17:13:49 |   │ │      max_attempts = 5                                                                                     │                               │
-17:13:49 |   │ │          question = 'Natalia sold clips to 48 of her friends in April, and then she sold half as many'+75 │                               │
-17:13:49 |   │ │   require_correct = True                                                                                  │                               │
-17:13:49 |   │ │ require_incorrect = True                                                                                  │                               │
-17:13:49 |   │ │              self = <reasoning_lab.inference.dual_reasoner.DualReasoner object at 0x14590f050c20>         │                               │
-17:13:49 |   │ ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────╯                               │
-17:13:49 |   ╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-17:13:49 |   ValueError: Cannot require both correct and incorrect simultaneously.
-17:13:49 | ============================================================
-17:13:49 | STAGE 2: Model Training
-17:13:49 | ============================================================
-17:13:49 | Training: forward_only
-18:08:06 |   ✓ Success
-18:08:06 | Training: backward_only
-19:00:32 |   ✓ Success
-19:00:32 | Training: hybrid_60_40
-20:48:59 |   ✓ Success
-20:48:59 | ============================================================
-20:48:59 | STAGE 3: Model Evaluation
-20:48:59 | ============================================================
-20:48:59 | Evaluating: baseline
-20:48:59 | Running: /home/DAVIDSON/munikzad/.conda/envs/reasoning/bin/python /home/DAVIDSON/munikzad/csc224n/reasoning/scripts/eval_reasoning.py /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/temp_eval_config.yaml --output-json /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/evals/baseline.json --greedy
-20:49:08 | Command failed with code 2
-20:49:08 |   Usage: eval_reasoning.py [OPTIONS] COMMAND [ARGS]...
-20:49:08 |   Try 'eval_reasoning.py --help' for help.
-20:49:08 |   ╭─ Error ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-20:49:08 |   │ No such command '/home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/temp_eval_config.yaml'.                                       │
-20:49:08 |   ╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-20:49:08 | Evaluating: forward_only
-20:49:08 | Running: /home/DAVIDSON/munikzad/.conda/envs/reasoning/bin/python /home/DAVIDSON/munikzad/csc224n/reasoning/scripts/eval_reasoning.py /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/temp_eval_config.yaml --output-json /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/evals/forward_only.json --greedy
-20:49:15 | Command failed with code 2
-20:49:15 |   Usage: eval_reasoning.py [OPTIONS] COMMAND [ARGS]...
-20:49:15 |   Try 'eval_reasoning.py --help' for help.
-20:49:15 |   ╭─ Error ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-20:49:15 |   │ No such command '/home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/temp_eval_config.yaml'.                                       │
-20:49:15 |   ╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-20:49:15 | Evaluating: backward_only
-20:49:15 | Running: /home/DAVIDSON/munikzad/.conda/envs/reasoning/bin/python /home/DAVIDSON/munikzad/csc224n/reasoning/scripts/eval_reasoning.py /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/temp_eval_config.yaml --output-json /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/evals/backward_only.json --greedy
-20:49:21 | Command failed with code 2
-20:49:21 |   Usage: eval_reasoning.py [OPTIONS] COMMAND [ARGS]...
-20:49:21 |   Try 'eval_reasoning.py --help' for help.
-20:49:21 |   ╭─ Error ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-20:49:21 |   │ No such command '/home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/temp_eval_config.yaml'.                                       │
-20:49:21 |   ╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-20:49:21 | Evaluating: hybrid_60_40
-20:49:21 | Running: /home/DAVIDSON/munikzad/.conda/envs/reasoning/bin/python /home/DAVIDSON/munikzad/csc224n/reasoning/scripts/eval_reasoning.py /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/temp_eval_config.yaml --output-json /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/evals/hybrid_60_40.json --greedy
-20:49:28 | Command failed with code 2
-20:49:28 |   Usage: eval_reasoning.py [OPTIONS] COMMAND [ARGS]...
-20:49:28 |   Try 'eval_reasoning.py --help' for help.
-20:49:28 |   ╭─ Error ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-20:49:28 |   │ No such command '/home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/temp_eval_config.yaml'.                                       │
-20:49:28 |   ╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-20:49:28 | ============================================================
-20:49:28 | STAGE 4: Results Analysis
-20:49:28 | ============================================================
-20:49:28 | Running: /home/DAVIDSON/munikzad/.conda/envs/reasoning/bin/python /home/DAVIDSON/munikzad/csc224n/reasoning/scripts/analyze_results.py /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/evals --output-latex /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/reports/main_results.tex --output-stats /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/reports/statistics.json
-20:49:28 | Command failed with code 1
-20:49:28 | ============================================================
-20:49:28 | EXPERIMENT COMPLETE
-20:49:28 | ============================================================
-20:49:28 | Total time: 3h 37m 26s
-20:49:28 | Results saved to: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs
-20:49:28 | 
-20:49:28 | Key output files:
-20:49:28 |   - Summary: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/reports/EXPERIMENT_SUMMARY.txt
-20:49:28 |   - LaTeX table: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/reports/main_results.tex
-20:49:28 |   - Evaluation JSONs: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/evals/*.json
-20:49:28 |   - Final results: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/final_results.json
+23:11:46 | Logging to: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/logs/experiment_20251227_231146.log
+23:11:46 | ============================================================
+23:11:46 | FORWARD-BACKWARD REASONING EXPERIMENT PIPELINE
+23:11:46 | ============================================================
+23:11:46 | Output directory: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs
+23:11:46 | Training configs: ['forward_only', 'backward_only', 'hybrid_60_40']
+23:11:46 | Data limit: 2000
+23:11:46 | Eval samples: 500
+23:11:46 | ============================================================
+23:11:46 | STAGE 1: Data Generation
+23:11:46 | ============================================================
+23:11:46 | Running: /home/DAVIDSON/munikzad/.conda/envs/reasoning/bin/python /home/DAVIDSON/munikzad/csc224n/reasoning/scripts/generate_dpo_pairs.py --limit 2000 --output-dir /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/data --rejection-sampling --max-rejection-attempts 5
+23:14:14 | Interrupted by user
+23:14:14 | ============================================================
+23:14:14 | EXPERIMENT COMPLETE
+23:14:14 | ============================================================
+23:14:14 | Total time: 0h 2m 28s
+23:14:14 | Results saved to: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs
+23:14:14 | 
+23:14:14 | Key output files:
+23:14:14 |   - Summary: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/reports/EXPERIMENT_SUMMARY.txt
+23:14:14 |   - LaTeX table: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/reports/main_results.tex
+23:14:14 |   - Evaluation JSONs: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/evals/*.json
+23:14:14 |   - Final results: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/final_results.json

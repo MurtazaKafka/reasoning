@@ -1,0 +1,24 @@
+2025-12-27 23:11:46 | INFO | Logging to: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/logs/experiment_20251227_231146.log
+2025-12-27 23:11:46 | INFO | ============================================================
+2025-12-27 23:11:46 | INFO | FORWARD-BACKWARD REASONING EXPERIMENT PIPELINE
+2025-12-27 23:11:46 | INFO | ============================================================
+2025-12-27 23:11:46 | INFO | Output directory: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs
+2025-12-27 23:11:46 | INFO | Training configs: ['forward_only', 'backward_only', 'hybrid_60_40']
+2025-12-27 23:11:46 | INFO | Data limit: 2000
+2025-12-27 23:11:46 | INFO | Eval samples: 500
+2025-12-27 23:11:46 | INFO | ============================================================
+2025-12-27 23:11:46 | INFO | STAGE 1: Data Generation
+2025-12-27 23:11:46 | INFO | ============================================================
+2025-12-27 23:11:46 | INFO | Running: /home/DAVIDSON/munikzad/.conda/envs/reasoning/bin/python /home/DAVIDSON/munikzad/csc224n/reasoning/scripts/generate_dpo_pairs.py --limit 2000 --output-dir /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/data --rejection-sampling --max-rejection-attempts 5
+2025-12-27 23:14:14 | WARNING | Interrupted by user
+2025-12-27 23:14:14 | INFO | ============================================================
+2025-12-27 23:14:14 | INFO | EXPERIMENT COMPLETE
+2025-12-27 23:14:14 | INFO | ============================================================
+2025-12-27 23:14:14 | INFO | Total time: 0h 2m 28s
+2025-12-27 23:14:14 | INFO | Results saved to: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs
+2025-12-27 23:14:14 | INFO | 
+2025-12-27 23:14:14 | INFO | Key output files:
+2025-12-27 23:14:14 | INFO |   - Summary: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/reports/EXPERIMENT_SUMMARY.txt
+2025-12-27 23:14:14 | INFO |   - LaTeX table: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/reports/main_results.tex
+2025-12-27 23:14:14 | INFO |   - Evaluation JSONs: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/evals/*.json
+2025-12-27 23:14:14 | INFO |   - Final results: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/final_results.json

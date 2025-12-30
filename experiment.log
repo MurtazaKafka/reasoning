@@ -1,25 +1,54 @@
 nohup: ignoring input
-23:11:46 | Logging to: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/logs/experiment_20251227_231146.log
-23:11:46 | ============================================================
-23:11:46 | FORWARD-BACKWARD REASONING EXPERIMENT PIPELINE
-23:11:46 | ============================================================
-23:11:46 | Output directory: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs
-23:11:46 | Training configs: ['forward_only', 'backward_only', 'hybrid_60_40']
-23:11:46 | Data limit: 2000
-23:11:46 | Eval samples: 500
-23:11:46 | ============================================================
-23:11:46 | STAGE 1: Data Generation
-23:11:46 | ============================================================
-23:11:46 | Running: /home/DAVIDSON/munikzad/.conda/envs/reasoning/bin/python /home/DAVIDSON/munikzad/csc224n/reasoning/scripts/generate_dpo_pairs.py --limit 2000 --output-dir /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/data --rejection-sampling --max-rejection-attempts 5
-23:14:14 | Interrupted by user
-23:14:14 | ============================================================
-23:14:14 | EXPERIMENT COMPLETE
-23:14:14 | ============================================================
-23:14:14 | Total time: 0h 2m 28s
-23:14:14 | Results saved to: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs
-23:14:14 | 
-23:14:14 | Key output files:
-23:14:14 |   - Summary: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/reports/EXPERIMENT_SUMMARY.txt
-23:14:14 |   - LaTeX table: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/reports/main_results.tex
-23:14:14 |   - Evaluation JSONs: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/evals/*.json
-23:14:14 |   - Final results: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/final_results.json
+23:31:06 | Logging to: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/logs/experiment_20251227_233106.log
+23:31:06 | ============================================================
+23:31:06 | FORWARD-BACKWARD REASONING EXPERIMENT PIPELINE
+23:31:06 | ============================================================
+23:31:06 | Output directory: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs
+23:31:06 | Training configs: ['forward_only', 'backward_only', 'hybrid_60_40']
+23:31:06 | Data limit: 2000
+23:31:06 | Eval samples: 500
+23:31:06 | ============================================================
+23:31:06 | STAGE 1: Data Generation
+23:31:06 | ============================================================
+23:31:06 | Running: /home/DAVIDSON/munikzad/.conda/envs/reasoning/bin/python /home/DAVIDSON/munikzad/csc224n/reasoning/scripts/generate_dpo_pairs.py --limit 2000 --output-dir /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/data --rejection-sampling --max-rejection-attempts 5
+01:31:06 | Command timed out after 2 hours
+01:31:06 | ============================================================
+01:31:06 | STAGE 2: Model Training
+01:31:06 | ============================================================
+01:31:06 | Training: forward_only
+02:25:21 |   ✓ Success
+02:25:21 | Training: backward_only
+03:17:51 |   ✓ Success
+03:17:51 | Training: hybrid_60_40
+05:06:18 |   ✓ Success
+05:06:18 | ============================================================
+05:06:18 | STAGE 3: Model Evaluation
+05:06:18 | ============================================================
+05:06:18 | Evaluating: baseline
+05:06:18 | Running: /home/DAVIDSON/munikzad/.conda/envs/reasoning/bin/python /home/DAVIDSON/munikzad/csc224n/reasoning/scripts/eval_reasoning.py main /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/temp_eval_config.yaml --output-json /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/evals/baseline.json --greedy
+07:06:18 | Command timed out after 2 hours
+07:06:18 | Evaluating: forward_only
+07:06:18 | Running: /home/DAVIDSON/munikzad/.conda/envs/reasoning/bin/python /home/DAVIDSON/munikzad/csc224n/reasoning/scripts/eval_reasoning.py main /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/temp_eval_config.yaml --output-json /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/evals/forward_only.json --greedy
+09:06:18 | Command timed out after 2 hours
+09:06:18 | Evaluating: backward_only
+09:06:18 | Running: /home/DAVIDSON/munikzad/.conda/envs/reasoning/bin/python /home/DAVIDSON/munikzad/csc224n/reasoning/scripts/eval_reasoning.py main /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/temp_eval_config.yaml --output-json /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/evals/backward_only.json --greedy
+11:06:18 | Command timed out after 2 hours
+11:06:18 | Evaluating: hybrid_60_40
+11:06:18 | Running: /home/DAVIDSON/munikzad/.conda/envs/reasoning/bin/python /home/DAVIDSON/munikzad/csc224n/reasoning/scripts/eval_reasoning.py main /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/temp_eval_config.yaml --output-json /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/evals/hybrid_60_40.json --greedy
+13:06:18 | Command timed out after 2 hours
+13:06:18 | ============================================================
+13:06:18 | STAGE 4: Results Analysis
+13:06:18 | ============================================================
+13:06:18 | Running: /home/DAVIDSON/munikzad/.conda/envs/reasoning/bin/python /home/DAVIDSON/munikzad/csc224n/reasoning/scripts/analyze_results.py /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/evals --output-latex /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/reports/main_results.tex --output-stats /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/reports/statistics.json
+13:06:19 | Command failed with code 1
+13:06:19 | ============================================================
+13:06:19 | EXPERIMENT COMPLETE
+13:06:19 | ============================================================
+13:06:19 | Total time: 13h 35m 12s
+13:06:19 | Results saved to: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs
+13:06:19 | 
+13:06:19 | Key output files:
+13:06:19 |   - Summary: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/reports/EXPERIMENT_SUMMARY.txt
+13:06:19 |   - LaTeX table: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/reports/main_results.tex
+13:06:19 |   - Evaluation JSONs: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/evals/*.json
+13:06:19 |   - Final results: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/final_results.json

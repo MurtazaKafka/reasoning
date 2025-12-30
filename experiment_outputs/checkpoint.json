@@ -1,10 +1,19 @@
 {
-  "stage": "interrupted",
-  "timestamp": "2025-12-27T23:14:14.581701",
+  "stage": "complete",
+  "timestamp": "2025-12-28T13:06:19.011053",
   "status": {
-    "data_generation": null,
-    "training": {},
-    "evaluation": {},
-    "analysis": null
+    "data_generation": false,
+    "training": {
+      "forward_only": true,
+      "backward_only": true,
+      "hybrid_60_40": true
+    },
+    "evaluation": {
+      "baseline": false,
+      "forward_only": false,
+      "backward_only": false,
+      "hybrid_60_40": false
+    },
+    "analysis": false
   }
 }

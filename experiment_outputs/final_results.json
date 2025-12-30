@@ -1,10 +1,19 @@
 {
-  "completed_at": "2025-12-27T23:14:14.583202",
-  "elapsed_seconds": 148.39167475700378,
+  "completed_at": "2025-12-28T13:06:19.012512",
+  "elapsed_seconds": 48912.33938121796,
   "results": {
-    "data_generation": null,
-    "training": {},
-    "evaluation": {},
-    "analysis": null
+    "data_generation": false,
+    "training": {
+      "forward_only": true,
+      "backward_only": true,
+      "hybrid_60_40": true
+    },
+    "evaluation": {
+      "baseline": false,
+      "forward_only": false,
+      "backward_only": false,
+      "hybrid_60_40": false
+    },
+    "analysis": false
   }
 }

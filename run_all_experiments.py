@@ -81,7 +81,7 @@ def run_command(cmd: List[str], logger: logging.Logger, cwd: Optional[Path] = No
             cwd=cwd or SCRIPT_DIR,
             capture_output=True,
             text=True,
-            timeout=7200,  # 2 hour timeout per command
+            timeout=43200,  # 12 hour timeout per command (was 2 hours)
         )
 
         if result.stdout:

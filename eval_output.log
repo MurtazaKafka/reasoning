@@ -1,0 +1,14 @@
+nohup: ignoring input
+02:22:16 | Logging to: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/logs/experiment_20251230_022216.log
+02:22:16 | ============================================================
+02:22:16 | FORWARD-BACKWARD REASONING EXPERIMENT PIPELINE
+02:22:16 | ============================================================
+02:22:16 | Output directory: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs
+02:22:16 | Training configs: ['forward_only', 'backward_only', 'hybrid_60_40']
+02:22:16 | Data limit: 2000
+02:22:16 | Eval samples: 500
+02:22:16 | ============================================================
+02:22:16 | STAGE 3: Model Evaluation
+02:22:16 | ============================================================
+02:22:16 | Evaluating: baseline
+02:22:16 | Running: /home/DAVIDSON/munikzad/.conda/envs/reasoning/bin/python /home/DAVIDSON/munikzad/csc224n/reasoning/scripts/eval_reasoning.py main /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/temp_eval_config.yaml --output-json /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/evals/baseline.json --greedy

@@ -1,0 +1,19 @@
+datasets:
+- name: gsm8k
+  path: openai/gsm8k
+  split: test
+  subset: main
+experiment:
+  max_samples_per_task: 500
+  name: baseline
+  seed: 42
+metrics:
+- name: accuracy
+- name: acknowledgement_rate
+- name: false_positive_rate
+- name: verification_calibration
+model:
+  adapter_path: null
+  base_model: meta-llama/Meta-Llama-3.1-8B-Instruct
+  dtype: bf16
+  load_in_8bit: true

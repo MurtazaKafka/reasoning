@@ -1,0 +1,13 @@
+2025-12-30 02:22:16 | INFO | Logging to: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/logs/experiment_20251230_022216.log
+2025-12-30 02:22:16 | INFO | ============================================================
+2025-12-30 02:22:16 | INFO | FORWARD-BACKWARD REASONING EXPERIMENT PIPELINE
+2025-12-30 02:22:16 | INFO | ============================================================
+2025-12-30 02:22:16 | INFO | Output directory: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs
+2025-12-30 02:22:16 | INFO | Training configs: ['forward_only', 'backward_only', 'hybrid_60_40']
+2025-12-30 02:22:16 | INFO | Data limit: 2000
+2025-12-30 02:22:16 | INFO | Eval samples: 500
+2025-12-30 02:22:16 | INFO | ============================================================
+2025-12-30 02:22:16 | INFO | STAGE 3: Model Evaluation
+2025-12-30 02:22:16 | INFO | ============================================================
+2025-12-30 02:22:16 | INFO | Evaluating: baseline
+2025-12-30 02:22:16 | INFO | Running: /home/DAVIDSON/munikzad/.conda/envs/reasoning/bin/python /home/DAVIDSON/munikzad/csc224n/reasoning/scripts/eval_reasoning.py main /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/temp_eval_config.yaml --output-json /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/evals/baseline.json --greedy

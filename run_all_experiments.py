@@ -70,37 +70,65 @@ def setup_logging(output_dir: Path) -> logging.Logger:
     return logger
 
 
-def run_command(cmd: List[str], logger: logging.Logger, cwd: Optional[Path] = None) -> bool:
-    """Run a command and log output. Returns True on success."""
+def run_command(
+    cmd: List[str],
+    logger: logging.Logger,
+    cwd: Optional[Path] = None,
+    timeout: int = 43200,  # 12 hour default timeout
+) -> bool:
+    """Run a command with streaming output. Returns True on success."""
     cmd_str = " ".join(cmd)
     logger.info(f"Running: {cmd_str}")
 
     try:
-        result = subprocess.run(
+        # Use Popen for streaming output instead of buffering
+        process = subprocess.Popen(
             cmd,
             cwd=cwd or SCRIPT_DIR,
-            capture_output=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,  # Combine stderr with stdout
             text=True,
-            timeout=43200,  # 12 hour timeout per command (was 2 hours)
+            bufsize=1,  # Line buffered
         )
 
-        if result.stdout:
-            for line in result.stdout.strip().split("\n"):
-                logger.debug(f"  {line}")
+        start_time = time.time()
+        output_lines = []
 
-        if result.returncode != 0:
-            logger.error(f"Command failed with code {result.returncode}")
-            if result.stderr:
-                for line in result.stderr.strip().split("\n"):
-                    logger.error(f"  {line}")
+        # Stream output in real-time
+        assert process.stdout is not None  # Guaranteed by stdout=PIPE
+        while True:
+            # Check timeout
+            elapsed = time.time() - start_time
+            if elapsed > timeout:
+                process.kill()
+                logger.error(f"Command timed out after {timeout/3600:.1f} hours")
+                return False
+
+            # Read line with timeout
+            line = process.stdout.readline()
+            if line:
+                line = line.rstrip()
+                output_lines.append(line)
+                # Log output at INFO level so it's visible
+                logger.info(f"  {line}")
+            elif process.poll() is not None:
+                # Process finished
+                break
+
+        # Get any remaining output
+        remaining = process.stdout.read()
+        if remaining:
+            for line in remaining.strip().split("\n"):
+                if line:
+                    logger.info(f"  {line}")
+
+        if process.returncode != 0:
+            logger.error(f"Command failed with code {process.returncode}")
             return False
 
         logger.info("  ✓ Success")
         return True
 
-    except subprocess.TimeoutExpired:
-        logger.error("Command timed out after 2 hours")
-        return False
     except Exception as e:
         logger.error(f"Command failed: {e}")
         return False
@@ -216,20 +244,39 @@ def stage_2_train_models(
             str(config_path),
         ]
 
-        # Run with modified environment
+        # Run with modified environment using streaming
         try:
-            result = subprocess.run(
+            process = subprocess.Popen(
                 cmd,
                 cwd=SCRIPT_DIR,
                 env=env,
-                capture_output=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
                 text=True,
-                timeout=14400,  # 4 hour timeout for training
+                bufsize=1,
             )
-            success = result.returncode == 0
 
-            if not success and result.stderr:
-                logger.error(f"Training error: {result.stderr[:500]}")
+            start_time_train = time.time()
+            assert process.stdout is not None
+
+            while True:
+                elapsed = time.time() - start_time_train
+                if elapsed > 43200:  # 12 hour timeout for training
+                    process.kill()
+                    logger.error(f"Training timed out after 12 hours")
+                    success = False
+                    break
+
+                line = process.stdout.readline()
+                if line:
+                    logger.info(f"  {line.rstrip()}")
+                elif process.poll() is not None:
+                    break
+
+            if process.returncode is not None:
+                success = process.returncode == 0
+            else:
+                success = False
 
         except Exception as e:
             logger.error(f"Training failed: {e}")
@@ -254,75 +301,57 @@ def stage_3_evaluate_models(
     model_configs: List[Dict[str, Any]],
     max_samples: int = 500,
 ) -> Dict[str, bool]:
-    """Stage 3: Evaluate all trained models."""
+    """Stage 3: Evaluate all trained models using optimized batch evaluation."""
     logger.info("=" * 60)
-    logger.info("STAGE 3: Model Evaluation")
+    logger.info("STAGE 3: Model Evaluation (Optimized Batch)")
     logger.info("=" * 60)
 
-    results = {}
     evals_dir = output_dir / "evals"
     evals_dir.mkdir(parents=True, exist_ok=True)
+    runs_dir = output_dir / "runs"
 
-    for model_cfg in model_configs:
-        name = model_cfg["name"]
-        logger.info(f"Evaluating: {name}")
+    # Build model list for the optimized eval script
+    model_names = [cfg["name"] for cfg in model_configs]
 
-        # Check if already evaluated
+    # Check which models are already evaluated
+    models_to_eval = []
+    results = {}
+    for cfg in model_configs:
+        name = cfg["name"]
         result_file = evals_dir / f"{name}.json"
         if result_file.exists():
-            logger.info(f"  Results exist, skipping")
+            logger.info(f"  {name}: Results exist, skipping")
             results[name] = True
-            continue
+        else:
+            models_to_eval.append(name)
 
-        # Create temporary eval config
-        eval_config = {
-            "experiment": {
-                "name": name,
-                "seed": 42,
-                "max_samples_per_task": max_samples,
-            },
-            "model": {
-                "base_model": model_cfg.get("base_model", "meta-llama/Meta-Llama-3.1-8B-Instruct"),
-                "adapter_path": model_cfg.get("adapter_path"),
-                "dtype": "bf16",
-                "load_in_8bit": True,
-            },
-            "metrics": [
-                {"name": "accuracy"},
-                {"name": "acknowledgement_rate"},
-                {"name": "false_positive_rate"},
-                {"name": "verification_calibration"},
-            ],
-            "datasets": [
-                {
-                    "name": "gsm8k",
-                    "path": "openai/gsm8k",
-                    "subset": "main",
-                    "split": "test",
-                },
-            ],
-        }
+    if not models_to_eval:
+        logger.info("All models already evaluated")
+        return results
 
-        # Save temp config
-        temp_config = output_dir / "temp_eval_config.yaml"
-        import yaml
-        temp_config.write_text(yaml.dump(eval_config))
+    logger.info(f"Models to evaluate: {models_to_eval}")
 
-        cmd = [
-            sys.executable,
-            str(SCRIPT_DIR / "scripts" / "eval_reasoning.py"),
-            "main",  # Typer subcommand (required since script has multiple commands)
-            str(temp_config),
-            "--output-json", str(result_file),
-            "--greedy",
-        ]
+    # Use the optimized batch evaluation script
+    cmd = [
+        sys.executable,
+        str(SCRIPT_DIR / "scripts" / "eval_all_models.py"),
+        "--output-dir", str(evals_dir),
+        "--runs-dir", str(runs_dir),
+        "--max-samples", str(max_samples),
+        "--models", *models_to_eval,
+        "--resume",  # Always enable resume for robustness
+    ]
 
-        success = run_command(cmd, logger)
-        results[name] = success
+    success = run_command(cmd, logger, timeout=43200)  # 12 hour timeout
 
-        # Cleanup temp config
-        if temp_config.exists():
-            temp_config.unlink()
+    # Check which models were successfully evaluated
+    for name in models_to_eval:
+        result_file = evals_dir / f"{name}.json"
+        results[name] = result_file.exists()
+        if results[name]:
+            logger.info(f"  {name}: ✓ Evaluated")
+        else:
+            logger.error(f"  {name}: ✗ Failed")
 
     return results
 

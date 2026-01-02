@@ -3,7 +3,7 @@
 #SBATCH --output=slurm_logs/%j_eval.out
 #SBATCH --error=slurm_logs/%j_eval.err
 #SBATCH --time=12:00:00
-#SBATCH --partition=gpu
+#SBATCH --partition=gpus
 #SBATCH --gres=gpu:1
 #SBATCH --mem=64G
 #SBATCH --cpus-per-task=8

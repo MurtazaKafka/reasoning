@@ -1,0 +1,107 @@
+\begin{thebibliography}{10}
+
+\bibitem{chen2025bidirectional}
+Zhi Chen et~al.
+\newblock {Bidirectional Reasoning for Improved Factual Accuracy}.
+\newblock {\em arXiv preprint}, 2025.
+
+\bibitem{cobbe2021gsm8k}
+Karl Cobbe, Vineet Kosaraju, Mohammad Bavarian, Mark Chen, Heewoo Jun, Lukasz
+  Kaiser, Matthias Plappert, Jerry Tworek, Jacob Hilton, Reiichiro Nakano,
+  et~al.
+\newblock {Training Verifiers to Solve Math Word Problems}.
+\newblock {\em arXiv preprint arXiv:2110.14168}, 2021.
+
+\bibitem{cobbe2021training}
+Karl Cobbe, Vineet Kosaraju, Mohammad Bavarian, Mark Chen, Heewoo Jun, Lukasz
+  Kaiser, Matthias Plappert, Jerry Tworek, Jacob Hilton, Reiichiro Nakano,
+  et~al.
+\newblock {Training Verifiers to Solve Math Word Problems}.
+\newblock {\em arXiv preprint arXiv:2110.14168}, 2021.
+
+\bibitem{dettmers2023qlora}
+Tim Dettmers, Artidoro Pagnoni, Ari Holtzman, and Luke Zettlemoyer.
+\newblock {QLoRA: Efficient Finetuning of Quantized LLMs}.
+\newblock {\em arXiv preprint arXiv:2305.14314}, 2023.
+
+\bibitem{hu2022lora}
+Edward~J Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean
+  Wang, Lu~Wang, and Weizhu Chen.
+\newblock {LoRA: Low-Rank Adaptation of Large Language Models}.
+\newblock {\em arXiv preprint arXiv:2106.09685}, 2022.
+
+\bibitem{huang2023survey}
+Lei Huang, Weijiang Yu, Weitao Ma, Weihong Zhong, Zhangyin Feng, Haotian Wang,
+  Qianglong Chen, Weihua Peng, Xiaocheng Feng, Bing Qin, et~al.
+\newblock {A Survey on Hallucination in Large Language Models: Principles,
+  Taxonomy, Challenges, and Open Questions}.
+\newblock {\em arXiv preprint arXiv:2311.05232}, 2023.
+
+\bibitem{jiang2024fobar}
+Weisen Jiang et~al.
+\newblock {FOBAR: Forward-Backward Reasoning in Language Models for
+  Verification}.
+\newblock {\em arXiv preprint}, 2024.
+
+\bibitem{lai2024step}
+Xin Lai et~al.
+\newblock {Step-DPO: Step-wise Preference Optimization for Long-chain Reasoning
+  of LLMs}.
+\newblock {\em arXiv preprint arXiv:2406.18629}, 2024.
+
+\bibitem{lightman2023lets}
+Hunter Lightman, Vineet Kosaraju, Yura Burda, Harri Edwards, Bowen Baker, Teddy
+  Lee, Jan Leike, John Schulman, Ilya Sutskever, and Karl Cobbe.
+\newblock {Let's Verify Step by Step}.
+\newblock {\em arXiv preprint arXiv:2305.20050}, 2023.
+
+\bibitem{liu2024reverse}
+Yinger Liu et~al.
+\newblock {Reverse Chain: A Generic-Rule for LLMs to Master Multi-API
+  Planning}.
+\newblock {\em arXiv preprint}, 2024.
+
+\bibitem{madaan2023self}
+Aman Madaan, Niket Tandon, Prakhar Gupta, Skyler Hallinan, Luyu Gao, Sarah
+  Wiegreffe, Uri Alon, Nouha Dziri, Shrimai Prabhumoye, Yiming Yang, et~al.
+\newblock {Self-Refine: Iterative Refinement with Self-Feedback}.
+\newblock {\em arXiv preprint arXiv:2303.17651}, 2023.
+
+\bibitem{pan2023automatically}
+Liangming Pan, Michael Saxon, Wenda Xu, Deepak Nathani, Xinyi Wang, and
+  William~Yang Wang.
+\newblock {Automatically Correcting Large Language Models: Surveying the
+  Landscape of Diverse Self-Correction Strategies}.
+\newblock {\em arXiv preprint arXiv:2308.03188}, 2023.
+
+\bibitem{rafailov2023direct}
+Rafael Rafailov, Archit Sharma, Eric Mitchell, Christopher~D Manning, Stefano
+  Ermon, and Chelsea Finn.
+\newblock {Direct Preference Optimization: Your Language Model is Secretly a
+  Reward Model}.
+\newblock In {\em Advances in Neural Information Processing Systems (NeurIPS)},
+  2023.
+
+\bibitem{wang2023selfconsistency}
+Xuezhi Wang, Jason Wei, Dale Schuurmans, Quoc Le, Ed~Chi, Sharan Narang,
+  Aakanksha Chowdhery, and Denny Zhou.
+\newblock {Self-Consistency Improves Chain of Thought Reasoning in Language
+  Models}.
+\newblock {\em arXiv preprint arXiv:2203.11171}, 2023.
+
+\bibitem{wei2022chain}
+Jason Wei, Xuezhi Wang, Dale Schuurmans, Maarten Bosma, Brian Ichter, Fei Xia,
+  Ed~Chi, Quoc Le, and Denny Zhou.
+\newblock {Chain-of-Thought Prompting Elicits Reasoning in Large Language
+  Models}.
+\newblock {\em Advances in Neural Information Processing Systems (NeurIPS)},
+  2022.
+
+\bibitem{yao2023tree}
+Shunyu Yao, Dian Yu, Jeffrey Zhao, Izhak Shafran, Thomas~L Griffiths, Yuan Cao,
+  and Karthik Narasimhan.
+\newblock {Tree of Thoughts: Deliberate Problem Solving with Large Language
+  Models}.
+\newblock {\em arXiv preprint arXiv:2305.10601}, 2023.
+
+\end{thebibliography}

@@ -20,8 +20,8 @@ cd "$(dirname "$0")"
 # Set HuggingFace token if needed
 # export HF_TOKEN="your_token_here"
 
-# Default arguments
-ARGS="--output-dir ./experiment_outputs/evals --runs-dir ./experiment_outputs/runs --max-samples 500"
+# Default arguments - using 350 samples to match existing checkpoint
+ARGS="--output-dir ./experiment_outputs/evals --runs-dir ./experiment_outputs/runs --max-samples 350"
 
 # Add any extra arguments passed to script
 if [ "$1" == "--resume" ]; then

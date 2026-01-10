@@ -1,0 +1,112 @@
+21:24:49 | Logging to: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/logs/eval_batch_20260103_212449.log
+Logging to: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/logs/eval_batch_20260103_212449.log
+21:24:49 | ============================================================
+21:24:49 | OPTIMIZED BATCH EVALUATION
+21:24:49 | ============================================================
+21:24:49 | Base model: meta-llama/Meta-Llama-3.1-8B-Instruct
+21:24:49 | Output dir: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/evals
+21:24:49 | Models: ['baseline', 'forward_only', 'backward_only', 'hybrid_60_40']
+21:24:49 | Max samples: 350
+21:24:49 | Loading GSM8K dataset...
+21:24:53 | Dataset loaded: 1319 test samples
+[21:24:58] Loading base model: meta-llama/Meta-Llama-3.1-8B-Instruct                                                     eval_all_models.py:123
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading checkpoint shards:   0%|                                                                                        | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|████████████████████                                                            | 1/4 [00:04<00:12,  4.12s/it]Loading checkpoint shards:  50%|████████████████████████████████████████                                        | 2/4 [00:08<00:09,  4.55s/it]Loading checkpoint shards:  75%|████████████████████████████████████████████████████████████                    | 3/4 [00:13<00:04,  4.65s/it]Loading checkpoint shards: 100%|████████████████████████████████████████████████████████████████████████████████| 4/4 [00:14<00:00,  2.98s/it]Loading checkpoint shards: 100%|████████████████████████████████████████████████████████████████████████████████| 4/4 [00:14<00:00,  3.54s/it]
+[21:25:14] Base model loaded successfully                                                                                eval_all_models.py:177
+21:25:14 | Base model loaded in 21.3s
+21:25:14 | ============================================================
+21:25:14 | Evaluating: baseline
+21:25:14 | ============================================================
+21:25:14 | Adapter already loaded: baseline
+21:25:14 | Resuming from sample 350/350
+21:25:14 | Evaluating baseline: 350 samples
+21:25:14 | Computing metrics for baseline...
+21:25:14 |   ✓ Results saved to /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/evals/baseline.json
+21:25:14 |   Accuracy: 83.1%
+21:25:14 |   Ack Rate: 67.8%
+21:25:14 |   FPR: 13.4%
+21:25:14 | ============================================================
+21:25:14 | Evaluating: forward_only
+21:25:14 | ============================================================
+21:25:14 | Loading adapter: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/runs/forward_only_dpo
+21:25:14 |   ✓ Adapter loaded: forward_only_dpo
+21:25:14 | Evaluating forward_only: 350 samples
+The following generation flags are not valid and may be ignored: ['top_p']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+/home/DAVIDSON/munikzad/.conda/envs/reasoning/lib/python3.13/site-packages/bitsandbytes/autograd/_functions.py:181: UserWarning: MatMul8bitLt: inputs will be cast from torch.bfloat16 to float16 during quantization
+  warnings.warn(f"MatMul8bitLt: inputs will be cast from {A.dtype} to float16 during quantization")
+21:36:48 |   [10/350] Accuracy so far: 7/10 = 70.0%
+21:50:45 |   [20/350] Accuracy so far: 14/20 = 70.0%
+22:03:15 |   [30/350] Accuracy so far: 23/30 = 76.7%
+22:16:12 |   [40/350] Accuracy so far: 32/40 = 80.0%
+22:26:52 |   [50/350] Accuracy so far: 42/50 = 84.0%
+22:26:52 |   Checkpoint saved at sample 50
+22:38:12 |   [60/350] Accuracy so far: 51/60 = 85.0%
+22:50:10 |   [70/350] Accuracy so far: 60/70 = 85.7%
+23:02:45 |   [80/350] Accuracy so far: 67/80 = 83.8%
+23:14:14 |   [90/350] Accuracy so far: 75/90 = 83.3%
+23:25:06 |   [100/350] Accuracy so far: 83/100 = 83.0%
+23:25:06 |   Checkpoint saved at sample 100
+23:37:24 |   [110/350] Accuracy so far: 92/110 = 83.6%
+23:50:29 |   [120/350] Accuracy so far: 100/120 = 83.3%
+00:04:19 |   [130/350] Accuracy so far: 109/130 = 83.8%
+00:16:41 |   [140/350] Accuracy so far: 119/140 = 85.0%
+00:27:56 |   [150/350] Accuracy so far: 128/150 = 85.3%
+00:27:56 |   Checkpoint saved at sample 150
+00:39:29 |   [160/350] Accuracy so far: 135/160 = 84.4%
+00:51:57 |   [170/350] Accuracy so far: 143/170 = 84.1%
+01:03:31 |   [180/350] Accuracy so far: 153/180 = 85.0%
+01:16:32 |   [190/350] Accuracy so far: 162/190 = 85.3%
+01:26:43 |   [200/350] Accuracy so far: 172/200 = 86.0%
+01:26:43 |   Checkpoint saved at sample 200
+01:36:15 |   [210/350] Accuracy so far: 180/210 = 85.7%
+01:47:29 |   [220/350] Accuracy so far: 190/220 = 86.4%
+01:59:17 |   [230/350] Accuracy so far: 199/230 = 86.5%
+02:10:41 |   [240/350] Accuracy so far: 208/240 = 86.7%
+02:22:33 |   [250/350] Accuracy so far: 215/250 = 86.0%
+02:22:33 |   Checkpoint saved at sample 250
+02:34:44 |   [260/350] Accuracy so far: 224/260 = 86.2%
+02:45:48 |   [270/350] Accuracy so far: 233/270 = 86.3%
+02:58:08 |   [280/350] Accuracy so far: 242/280 = 86.4%
+03:08:11 |   [290/350] Accuracy so far: 252/290 = 86.9%
+03:19:20 |   [300/350] Accuracy so far: 261/300 = 87.0%
+03:19:20 |   Checkpoint saved at sample 300
+03:31:40 |   [310/350] Accuracy so far: 267/310 = 86.1%
+03:42:44 |   [320/350] Accuracy so far: 277/320 = 86.6%
+03:54:25 |   [330/350] Accuracy so far: 285/330 = 86.4%
+04:05:49 |   [340/350] Accuracy so far: 294/340 = 86.5%
+04:18:06 |   [350/350] Accuracy so far: 303/350 = 86.6%
+04:18:06 |   Checkpoint saved at sample 350
+04:18:06 | Computing metrics for forward_only...
+04:18:06 |   ✓ Results saved to /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/evals/forward_only.json
+04:18:06 |   Accuracy: 86.6%
+04:18:06 |   Ack Rate: 44.7%
+04:18:06 |   FPR: 10.2%
+04:18:06 | ============================================================
+04:18:06 | Evaluating: backward_only
+04:18:06 | ============================================================
+04:18:06 | Loading adapter: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/runs/backward_only_dpo
+/home/DAVIDSON/munikzad/.conda/envs/reasoning/lib/python3.13/site-packages/peft/tuners/tuners_utils.py:196: UserWarning: Already found a `peft_config` attribute in the model. This will lead to having multiple adapters in the model. Make sure to know what you are doing!
+  warnings.warn(
+04:18:07 |   ✓ Adapter loaded: backward_only_dpo
+04:18:07 | Evaluating backward_only: 350 samples
+04:32:30 |   [10/350] Accuracy so far: 7/10 = 70.0%
+04:46:34 |   [20/350] Accuracy so far: 15/20 = 75.0%
+04:59:52 |   [30/350] Accuracy so far: 22/30 = 73.3%
+05:13:30 |   [40/350] Accuracy so far: 32/40 = 80.0%
+05:28:17 |   [50/350] Accuracy so far: 42/50 = 84.0%
+05:28:17 |   Checkpoint saved at sample 50
+05:42:46 |   [60/350] Accuracy so far: 50/60 = 83.3%
+05:55:58 |   [70/350] Accuracy so far: 57/70 = 81.4%
+06:08:58 |   [80/350] Accuracy so far: 65/80 = 81.2%
+06:23:53 |   [90/350] Accuracy so far: 74/90 = 82.2%
+06:38:38 |   [100/350] Accuracy so far: 83/100 = 83.0%
+06:38:38 |   Checkpoint saved at sample 100
+06:52:58 |   [110/350] Accuracy so far: 93/110 = 84.5%
+07:07:26 |   [120/350] Accuracy so far: 102/120 = 85.0%
+07:22:01 |   [130/350] Accuracy so far: 111/130 = 85.4%
+07:36:58 |   [140/350] Accuracy so far: 120/140 = 85.7%
+07:50:48 |   [150/350] Accuracy so far: 129/150 = 86.0%
+07:50:48 |   Checkpoint saved at sample 150
+08:06:20 |   [160/350] Accuracy so far: 135/160 = 84.4%
+08:21:31 |   [170/350] Accuracy so far: 143/170 = 84.1%
+08:35:29 |   [180/350] Accuracy so far: 153/180 = 85.0%

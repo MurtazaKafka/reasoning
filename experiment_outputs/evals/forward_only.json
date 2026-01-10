@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "model_name": "forward_only",
+    "adapter_path": "/home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/runs/forward_only_dpo",
+    "num_samples": 350,
+    "timestamp": "2026-01-04T04:18:06.667012"
+  },
+  "results": {
+    "gsm8k": {
+      "accuracy": {
+        "value": 0.8657142857142858,
+        "details": {}
+      },
+      "acknowledgement_rate": {
+        "value": 0.44680851063829785,
+        "details": {
+          "total_incorrect": 47.0,
+          "acknowledged_as_fail": 21.0
+        }
+      },
+      "false_positive_rate": {
+        "value": 0.10231023102310231,
+        "details": {
+          "total_correct": 303.0,
+          "incorrectly_flagged_fail": 31.0
+        }
+      },
+      "verification_calibration": {
+        "value": 0.42424242424242425,
+        "details": {
+          "accuracy": 0.8371428571428572,
+          "precision": 0.40384615384615385,
+          "recall": 0.44680851063829785,
+          "f1": 0.42424242424242425,
+          "true_positives": 21.0,
+          "true_negatives": 272.0,
+          "false_positives": 31.0,
+          "false_negatives": 26.0
+        }
+      }
+    }
+  }
+}

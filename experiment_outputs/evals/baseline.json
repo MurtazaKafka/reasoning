@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "model_name": "baseline",
+    "adapter_path": null,
+    "num_samples": 350,
+    "timestamp": "2026-01-03T21:25:14.567530"
+  },
+  "results": {
+    "gsm8k": {
+      "accuracy": {
+        "value": 0.8314285714285714,
+        "details": {}
+      },
+      "acknowledgement_rate": {
+        "value": 0.6779661016949152,
+        "details": {
+          "total_incorrect": 59.0,
+          "acknowledged_as_fail": 40.0
+        }
+      },
+      "false_positive_rate": {
+        "value": 0.13402061855670103,
+        "details": {
+          "total_correct": 291.0,
+          "incorrectly_flagged_fail": 39.0
+        }
+      },
+      "verification_calibration": {
+        "value": 0.5797101449275363,
+        "details": {
+          "accuracy": 0.8342857142857143,
+          "precision": 0.5063291139240507,
+          "recall": 0.6779661016949152,
+          "f1": 0.5797101449275363,
+          "true_positives": 40.0,
+          "true_negatives": 252.0,
+          "false_positives": 39.0,
+          "false_negatives": 19.0
+        }
+      }
+    }
+  }
+}

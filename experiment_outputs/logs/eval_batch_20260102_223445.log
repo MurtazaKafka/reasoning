@@ -1,0 +1,10 @@
+2026-01-02 22:34:45 | INFO | Logging to: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/logs/eval_batch_20260102_223445.log
+2026-01-02 22:34:45 | INFO | ============================================================
+2026-01-02 22:34:45 | INFO | OPTIMIZED BATCH EVALUATION
+2026-01-02 22:34:45 | INFO | ============================================================
+2026-01-02 22:34:45 | INFO | Base model: meta-llama/Meta-Llama-3.1-8B-Instruct
+2026-01-02 22:34:45 | INFO | Output dir: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/evals
+2026-01-02 22:34:45 | INFO | Models: ['baseline', 'forward_only', 'backward_only', 'hybrid_60_40']
+2026-01-02 22:34:45 | INFO | Max samples: 500
+2026-01-02 22:34:45 | INFO | Loading GSM8K dataset...
+2026-01-02 22:34:46 | INFO | Dataset loaded: 1319 test samples

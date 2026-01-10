@@ -1,0 +1,102 @@
+2026-01-03 21:24:49 | INFO | Logging to: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/logs/eval_batch_20260103_212449.log
+2026-01-03 21:24:49 | INFO | ============================================================
+2026-01-03 21:24:49 | INFO | OPTIMIZED BATCH EVALUATION
+2026-01-03 21:24:49 | INFO | ============================================================
+2026-01-03 21:24:49 | INFO | Base model: meta-llama/Meta-Llama-3.1-8B-Instruct
+2026-01-03 21:24:49 | INFO | Output dir: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/evals
+2026-01-03 21:24:49 | INFO | Models: ['baseline', 'forward_only', 'backward_only', 'hybrid_60_40']
+2026-01-03 21:24:49 | INFO | Max samples: 350
+2026-01-03 21:24:49 | INFO | Loading GSM8K dataset...
+2026-01-03 21:24:53 | INFO | Dataset loaded: 1319 test samples
+2026-01-03 21:25:14 | INFO | Base model loaded in 21.3s
+2026-01-03 21:25:14 | INFO | ============================================================
+2026-01-03 21:25:14 | INFO | Evaluating: baseline
+2026-01-03 21:25:14 | INFO | ============================================================
+2026-01-03 21:25:14 | INFO | Adapter already loaded: baseline
+2026-01-03 21:25:14 | INFO | Resuming from sample 350/350
+2026-01-03 21:25:14 | INFO | Evaluating baseline: 350 samples
+2026-01-03 21:25:14 | INFO | Computing metrics for baseline...
+2026-01-03 21:25:14 | INFO |   ✓ Results saved to /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/evals/baseline.json
+2026-01-03 21:25:14 | INFO |   Accuracy: 83.1%
+2026-01-03 21:25:14 | INFO |   Ack Rate: 67.8%
+2026-01-03 21:25:14 | INFO |   FPR: 13.4%
+2026-01-03 21:25:14 | INFO | ============================================================
+2026-01-03 21:25:14 | INFO | Evaluating: forward_only
+2026-01-03 21:25:14 | INFO | ============================================================
+2026-01-03 21:25:14 | INFO | Loading adapter: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/runs/forward_only_dpo
+2026-01-03 21:25:14 | INFO |   ✓ Adapter loaded: forward_only_dpo
+2026-01-03 21:25:14 | INFO | Evaluating forward_only: 350 samples
+2026-01-03 21:36:48 | INFO |   [10/350] Accuracy so far: 7/10 = 70.0%
+2026-01-03 21:50:45 | INFO |   [20/350] Accuracy so far: 14/20 = 70.0%
+2026-01-03 22:03:15 | INFO |   [30/350] Accuracy so far: 23/30 = 76.7%
+2026-01-03 22:16:12 | INFO |   [40/350] Accuracy so far: 32/40 = 80.0%
+2026-01-03 22:26:52 | INFO |   [50/350] Accuracy so far: 42/50 = 84.0%
+2026-01-03 22:26:52 | INFO |   Checkpoint saved at sample 50
+2026-01-03 22:38:12 | INFO |   [60/350] Accuracy so far: 51/60 = 85.0%
+2026-01-03 22:50:10 | INFO |   [70/350] Accuracy so far: 60/70 = 85.7%
+2026-01-03 23:02:45 | INFO |   [80/350] Accuracy so far: 67/80 = 83.8%
+2026-01-03 23:14:14 | INFO |   [90/350] Accuracy so far: 75/90 = 83.3%
+2026-01-03 23:25:06 | INFO |   [100/350] Accuracy so far: 83/100 = 83.0%
+2026-01-03 23:25:06 | INFO |   Checkpoint saved at sample 100
+2026-01-03 23:37:24 | INFO |   [110/350] Accuracy so far: 92/110 = 83.6%
+2026-01-03 23:50:29 | INFO |   [120/350] Accuracy so far: 100/120 = 83.3%
+2026-01-04 00:04:19 | INFO |   [130/350] Accuracy so far: 109/130 = 83.8%
+2026-01-04 00:16:41 | INFO |   [140/350] Accuracy so far: 119/140 = 85.0%
+2026-01-04 00:27:56 | INFO |   [150/350] Accuracy so far: 128/150 = 85.3%
+2026-01-04 00:27:56 | INFO |   Checkpoint saved at sample 150
+2026-01-04 00:39:29 | INFO |   [160/350] Accuracy so far: 135/160 = 84.4%
+2026-01-04 00:51:57 | INFO |   [170/350] Accuracy so far: 143/170 = 84.1%
+2026-01-04 01:03:31 | INFO |   [180/350] Accuracy so far: 153/180 = 85.0%
+2026-01-04 01:16:32 | INFO |   [190/350] Accuracy so far: 162/190 = 85.3%
+2026-01-04 01:26:43 | INFO |   [200/350] Accuracy so far: 172/200 = 86.0%
+2026-01-04 01:26:43 | INFO |   Checkpoint saved at sample 200
+2026-01-04 01:36:15 | INFO |   [210/350] Accuracy so far: 180/210 = 85.7%
+2026-01-04 01:47:29 | INFO |   [220/350] Accuracy so far: 190/220 = 86.4%
+2026-01-04 01:59:17 | INFO |   [230/350] Accuracy so far: 199/230 = 86.5%
+2026-01-04 02:10:41 | INFO |   [240/350] Accuracy so far: 208/240 = 86.7%
+2026-01-04 02:22:33 | INFO |   [250/350] Accuracy so far: 215/250 = 86.0%
+2026-01-04 02:22:33 | INFO |   Checkpoint saved at sample 250
+2026-01-04 02:34:44 | INFO |   [260/350] Accuracy so far: 224/260 = 86.2%
+2026-01-04 02:45:48 | INFO |   [270/350] Accuracy so far: 233/270 = 86.3%
+2026-01-04 02:58:08 | INFO |   [280/350] Accuracy so far: 242/280 = 86.4%
+2026-01-04 03:08:11 | INFO |   [290/350] Accuracy so far: 252/290 = 86.9%
+2026-01-04 03:19:20 | INFO |   [300/350] Accuracy so far: 261/300 = 87.0%
+2026-01-04 03:19:20 | INFO |   Checkpoint saved at sample 300
+2026-01-04 03:31:40 | INFO |   [310/350] Accuracy so far: 267/310 = 86.1%
+2026-01-04 03:42:44 | INFO |   [320/350] Accuracy so far: 277/320 = 86.6%
+2026-01-04 03:54:25 | INFO |   [330/350] Accuracy so far: 285/330 = 86.4%
+2026-01-04 04:05:49 | INFO |   [340/350] Accuracy so far: 294/340 = 86.5%
+2026-01-04 04:18:06 | INFO |   [350/350] Accuracy so far: 303/350 = 86.6%
+2026-01-04 04:18:06 | INFO |   Checkpoint saved at sample 350
+2026-01-04 04:18:06 | INFO | Computing metrics for forward_only...
+2026-01-04 04:18:06 | INFO |   ✓ Results saved to /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/evals/forward_only.json
+2026-01-04 04:18:06 | INFO |   Accuracy: 86.6%
+2026-01-04 04:18:06 | INFO |   Ack Rate: 44.7%
+2026-01-04 04:18:06 | INFO |   FPR: 10.2%
+2026-01-04 04:18:06 | INFO | ============================================================
+2026-01-04 04:18:06 | INFO | Evaluating: backward_only
+2026-01-04 04:18:06 | INFO | ============================================================
+2026-01-04 04:18:06 | INFO | Loading adapter: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/runs/backward_only_dpo
+2026-01-04 04:18:07 | INFO |   ✓ Adapter loaded: backward_only_dpo
+2026-01-04 04:18:07 | INFO | Evaluating backward_only: 350 samples
+2026-01-04 04:32:30 | INFO |   [10/350] Accuracy so far: 7/10 = 70.0%
+2026-01-04 04:46:34 | INFO |   [20/350] Accuracy so far: 15/20 = 75.0%
+2026-01-04 04:59:52 | INFO |   [30/350] Accuracy so far: 22/30 = 73.3%
+2026-01-04 05:13:30 | INFO |   [40/350] Accuracy so far: 32/40 = 80.0%
+2026-01-04 05:28:17 | INFO |   [50/350] Accuracy so far: 42/50 = 84.0%
+2026-01-04 05:28:17 | INFO |   Checkpoint saved at sample 50
+2026-01-04 05:42:46 | INFO |   [60/350] Accuracy so far: 50/60 = 83.3%
+2026-01-04 05:55:58 | INFO |   [70/350] Accuracy so far: 57/70 = 81.4%
+2026-01-04 06:08:58 | INFO |   [80/350] Accuracy so far: 65/80 = 81.2%
+2026-01-04 06:23:53 | INFO |   [90/350] Accuracy so far: 74/90 = 82.2%
+2026-01-04 06:38:38 | INFO |   [100/350] Accuracy so far: 83/100 = 83.0%
+2026-01-04 06:38:38 | INFO |   Checkpoint saved at sample 100
+2026-01-04 06:52:58 | INFO |   [110/350] Accuracy so far: 93/110 = 84.5%
+2026-01-04 07:07:26 | INFO |   [120/350] Accuracy so far: 102/120 = 85.0%
+2026-01-04 07:22:01 | INFO |   [130/350] Accuracy so far: 111/130 = 85.4%
+2026-01-04 07:36:58 | INFO |   [140/350] Accuracy so far: 120/140 = 85.7%
+2026-01-04 07:50:48 | INFO |   [150/350] Accuracy so far: 129/150 = 86.0%
+2026-01-04 07:50:48 | INFO |   Checkpoint saved at sample 150
+2026-01-04 08:06:20 | INFO |   [160/350] Accuracy so far: 135/160 = 84.4%
+2026-01-04 08:21:31 | INFO |   [170/350] Accuracy so far: 143/170 = 84.1%
+2026-01-04 08:35:29 | INFO |   [180/350] Accuracy so far: 153/180 = 85.0%

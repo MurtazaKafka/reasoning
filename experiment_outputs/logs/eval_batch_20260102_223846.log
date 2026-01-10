@@ -1,0 +1,58 @@
+2026-01-02 22:38:46 | INFO | Logging to: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/logs/eval_batch_20260102_223846.log
+2026-01-02 22:38:46 | INFO | ============================================================
+2026-01-02 22:38:46 | INFO | OPTIMIZED BATCH EVALUATION
+2026-01-02 22:38:46 | INFO | ============================================================
+2026-01-02 22:38:46 | INFO | Base model: meta-llama/Meta-Llama-3.1-8B-Instruct
+2026-01-02 22:38:46 | INFO | Output dir: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/evals
+2026-01-02 22:38:46 | INFO | Models: ['baseline', 'forward_only', 'backward_only', 'hybrid_60_40']
+2026-01-02 22:38:46 | INFO | Max samples: 500
+2026-01-02 22:38:46 | INFO | Loading GSM8K dataset...
+2026-01-02 22:38:48 | INFO | Dataset loaded: 1319 test samples
+2026-01-02 22:40:29 | INFO | Base model loaded in 101.0s
+2026-01-02 22:40:29 | INFO | ============================================================
+2026-01-02 22:40:29 | INFO | Evaluating: baseline
+2026-01-02 22:40:29 | INFO | ============================================================
+2026-01-02 22:40:29 | INFO | Adapter already loaded: baseline
+2026-01-02 22:40:29 | INFO | Evaluating baseline: 500 samples
+2026-01-02 22:51:02 | INFO |   [10/500] Accuracy so far: 6/10 = 60.0%
+2026-01-02 23:01:02 | INFO |   [20/500] Accuracy so far: 14/20 = 70.0%
+2026-01-02 23:11:34 | INFO |   [30/500] Accuracy so far: 21/30 = 70.0%
+2026-01-02 23:21:59 | INFO |   [40/500] Accuracy so far: 29/40 = 72.5%
+2026-01-02 23:32:21 | INFO |   [50/500] Accuracy so far: 38/50 = 76.0%
+2026-01-02 23:32:21 | INFO |   Checkpoint saved at sample 50
+2026-01-02 23:43:22 | INFO |   [60/500] Accuracy so far: 47/60 = 78.3%
+2026-01-02 23:53:23 | INFO |   [70/500] Accuracy so far: 54/70 = 77.1%
+2026-01-03 00:03:32 | INFO |   [80/500] Accuracy so far: 63/80 = 78.8%
+2026-01-03 00:12:48 | INFO |   [90/500] Accuracy so far: 70/90 = 77.8%
+2026-01-03 00:23:48 | INFO |   [100/500] Accuracy so far: 79/100 = 79.0%
+2026-01-03 00:23:48 | INFO |   Checkpoint saved at sample 100
+2026-01-03 00:34:20 | INFO |   [110/500] Accuracy so far: 88/110 = 80.0%
+2026-01-03 00:45:32 | INFO |   [120/500] Accuracy so far: 97/120 = 80.8%
+2026-01-03 00:55:08 | INFO |   [130/500] Accuracy so far: 106/130 = 81.5%
+2026-01-03 01:06:45 | INFO |   [140/500] Accuracy so far: 116/140 = 82.9%
+2026-01-03 01:17:06 | INFO |   [150/500] Accuracy so far: 124/150 = 82.7%
+2026-01-03 01:17:06 | INFO |   Checkpoint saved at sample 150
+2026-01-03 01:27:29 | INFO |   [160/500] Accuracy so far: 130/160 = 81.2%
+2026-01-03 01:38:30 | INFO |   [170/500] Accuracy so far: 139/170 = 81.8%
+2026-01-03 01:49:39 | INFO |   [180/500] Accuracy so far: 149/180 = 82.8%
+2026-01-03 02:00:33 | INFO |   [190/500] Accuracy so far: 156/190 = 82.1%
+2026-01-03 02:11:04 | INFO |   [200/500] Accuracy so far: 164/200 = 82.0%
+2026-01-03 02:11:04 | INFO |   Checkpoint saved at sample 200
+2026-01-03 02:22:01 | INFO |   [210/500] Accuracy so far: 173/210 = 82.4%
+2026-01-03 02:32:21 | INFO |   [220/500] Accuracy so far: 182/220 = 82.7%
+2026-01-03 02:43:52 | INFO |   [230/500] Accuracy so far: 191/230 = 83.0%
+2026-01-03 02:54:10 | INFO |   [240/500] Accuracy so far: 200/240 = 83.3%
+2026-01-03 03:04:26 | INFO |   [250/500] Accuracy so far: 209/250 = 83.6%
+2026-01-03 03:04:26 | INFO |   Checkpoint saved at sample 250
+2026-01-03 03:15:22 | INFO |   [260/500] Accuracy so far: 218/260 = 83.8%
+2026-01-03 03:25:54 | INFO |   [270/500] Accuracy so far: 223/270 = 82.6%
+2026-01-03 03:36:14 | INFO |   [280/500] Accuracy so far: 231/280 = 82.5%
+2026-01-03 03:47:47 | INFO |   [290/500] Accuracy so far: 239/290 = 82.4%
+2026-01-03 03:57:26 | INFO |   [300/500] Accuracy so far: 248/300 = 82.7%
+2026-01-03 03:57:26 | INFO |   Checkpoint saved at sample 300
+2026-01-03 04:07:40 | INFO |   [310/500] Accuracy so far: 255/310 = 82.3%
+2026-01-03 04:18:04 | INFO |   [320/500] Accuracy so far: 264/320 = 82.5%
+2026-01-03 04:29:39 | INFO |   [330/500] Accuracy so far: 273/330 = 82.7%
+2026-01-03 04:39:30 | INFO |   [340/500] Accuracy so far: 282/340 = 82.9%
+2026-01-03 04:49:01 | INFO |   [350/500] Accuracy so far: 291/350 = 83.1%
+2026-01-03 04:49:01 | INFO |   Checkpoint saved at sample 350

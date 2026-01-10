@@ -1,0 +1,51 @@
+22:38:46 | Logging to: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/logs/eval_batch_20260102_223846.log
+Logging to: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/logs/eval_batch_20260102_223846.log
+22:38:46 | ============================================================
+22:38:46 | OPTIMIZED BATCH EVALUATION
+22:38:46 | ============================================================
+22:38:46 | Base model: meta-llama/Meta-Llama-3.1-8B-Instruct
+22:38:46 | Output dir: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/evals
+22:38:46 | Models: ['baseline', 'forward_only', 'backward_only', 'hybrid_60_40']
+22:38:46 | Max samples: 500
+22:38:46 | Loading GSM8K dataset...
+22:38:48 | Dataset loaded: 1319 test samples
+[22:38:53] Loading base model: meta-llama/Meta-Llama-3.1-8B-Instruct                                         eval_all_models.py:123
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading checkpoint shards:   0%|                                                                            | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|█████████████████                                                   | 1/4 [00:08<00:25,  8.63s/it]Loading checkpoint shards:  50%|██████████████████████████████████                                  | 2/4 [00:17<00:18,  9.02s/it]Loading checkpoint shards:  75%|███████████████████████████████████████████████████                 | 3/4 [00:27<00:09,  9.08s/it]Loading checkpoint shards: 100%|████████████████████████████████████████████████████████████████████| 4/4 [00:28<00:00,  6.06s/it]Loading checkpoint shards: 100%|████████████████████████████████████████████████████████████████████| 4/4 [00:28<00:00,  7.13s/it]
+[22:40:29] Base model loaded successfully                                                                    eval_all_models.py:177
+22:40:29 | Base model loaded in 101.0s
+22:40:29 | ============================================================
+22:40:29 | Evaluating: baseline
+22:40:29 | ============================================================
+22:40:29 | Adapter already loaded: baseline
+22:40:29 | Evaluating baseline: 500 samples
+The following generation flags are not valid and may be ignored: ['top_p']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+/home/DAVIDSON/munikzad/.conda/envs/reasoning/lib/python3.13/site-packages/bitsandbytes/autograd/_functions.py:181: UserWarning: MatMul8bitLt: inputs will be cast from torch.bfloat16 to float16 during quantization
+  warnings.warn(f"MatMul8bitLt: inputs will be cast from {A.dtype} to float16 during quantization")
+22:51:02 |   [10/500] Accuracy so far: 6/10 = 60.0%
+23:01:02 |   [20/500] Accuracy so far: 14/20 = 70.0%
+23:11:34 |   [30/500] Accuracy so far: 21/30 = 70.0%
+23:21:59 |   [40/500] Accuracy so far: 29/40 = 72.5%
+23:32:21 |   [50/500] Accuracy so far: 38/50 = 76.0%
+23:32:21 |   Checkpoint saved at sample 50
+23:43:22 |   [60/500] Accuracy so far: 47/60 = 78.3%
+23:53:23 |   [70/500] Accuracy so far: 54/70 = 77.1%
+00:03:32 |   [80/500] Accuracy so far: 63/80 = 78.8%
+00:12:48 |   [90/500] Accuracy so far: 70/90 = 77.8%
+00:23:48 |   [100/500] Accuracy so far: 79/100 = 79.0%
+00:23:48 |   Checkpoint saved at sample 100
+00:34:20 |   [110/500] Accuracy so far: 88/110 = 80.0%
+00:45:32 |   [120/500] Accuracy so far: 97/120 = 80.8%
+00:55:08 |   [130/500] Accuracy so far: 106/130 = 81.5%
+01:06:45 |   [140/500] Accuracy so far: 116/140 = 82.9%
+01:17:06 |   [150/500] Accuracy so far: 124/150 = 82.7%
+01:17:06 |   Checkpoint saved at sample 150
+01:27:29 |   [160/500] Accuracy so far: 130/160 = 81.2%
+01:38:30 |   [170/500] Accuracy so far: 139/170 = 81.8%
+01:49:39 |   [180/500] Accuracy so far: 149/180 = 82.8%
+02:00:33 |   [190/500] Accuracy so far: 156/190 = 82.1%
+02:11:04 |   [200/500] Accuracy so far: 164/200 = 82.0%
+02:11:04 |   Checkpoint saved at sample 200
+02:22:01 |   [210/500] Accuracy so far: 173/210 = 82.4%
+02:32:21 |   [220/500] Accuracy so far: 182/220 = 82.7%
+02:43:52 |   [230/500] Accuracy so far: 191/230 = 83.0%

@@ -1,0 +1,37 @@
+2026-01-10 00:21:52 | INFO | Logging to: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/logs/eval_batch_20260110_002152.log
+2026-01-10 00:21:52 | INFO | ============================================================
+2026-01-10 00:21:52 | INFO | OPTIMIZED BATCH EVALUATION
+2026-01-10 00:21:52 | INFO | ============================================================
+2026-01-10 00:21:52 | INFO | Base model: meta-llama/Meta-Llama-3.1-8B-Instruct
+2026-01-10 00:21:52 | INFO | Output dir: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/evals
+2026-01-10 00:21:52 | INFO | Models: ['baseline', 'forward_only', 'backward_only', 'hybrid_60_40']
+2026-01-10 00:21:52 | INFO | Max samples: 350
+2026-01-10 00:21:52 | INFO | Resuming - already completed: ['baseline', 'forward_only']
+2026-01-10 00:21:52 | INFO | Loading GSM8K dataset...
+2026-01-10 00:21:55 | INFO | Dataset loaded: 1319 test samples
+2026-01-10 00:22:32 | INFO | Base model loaded in 37.2s
+2026-01-10 00:22:32 | INFO | Skipping baseline (already completed)
+2026-01-10 00:22:32 | INFO | Skipping forward_only (already completed)
+2026-01-10 00:22:32 | INFO | ============================================================
+2026-01-10 00:22:32 | INFO | Evaluating: backward_only
+2026-01-10 00:22:32 | INFO | ============================================================
+2026-01-10 00:22:32 | INFO | Loading adapter: /home/DAVIDSON/munikzad/csc224n/reasoning/experiment_outputs/runs/backward_only_dpo
+2026-01-10 00:22:32 | INFO |   ✓ Adapter loaded: backward_only_dpo
+2026-01-10 00:22:32 | INFO | Resuming from sample 150/350
+2026-01-10 00:22:32 | INFO | Evaluating backward_only: 350 samples
+2026-01-10 00:37:55 | INFO |   [160/350] Accuracy so far: 135/160 = 84.4%
+2026-01-10 00:52:42 | INFO |   [170/350] Accuracy so far: 143/170 = 84.1%
+2026-01-10 01:06:13 | INFO |   [180/350] Accuracy so far: 153/180 = 85.0%
+2026-01-10 01:21:01 | INFO |   [190/350] Accuracy so far: 159/190 = 83.7%
+2026-01-10 01:34:57 | INFO |   [200/350] Accuracy so far: 168/200 = 84.0%
+2026-01-10 01:34:57 | INFO |   Checkpoint saved at sample 200
+2026-01-10 01:49:07 | INFO |   [210/350] Accuracy so far: 176/210 = 83.8%
+2026-01-10 02:02:58 | INFO |   [220/350] Accuracy so far: 184/220 = 83.6%
+2026-01-10 02:16:22 | INFO |   [230/350] Accuracy so far: 193/230 = 83.9%
+2026-01-10 02:31:02 | INFO |   [240/350] Accuracy so far: 202/240 = 84.2%
+2026-01-10 02:45:39 | INFO |   [250/350] Accuracy so far: 209/250 = 83.6%
+2026-01-10 02:45:39 | INFO |   Checkpoint saved at sample 250
+2026-01-10 02:59:18 | INFO |   [260/350] Accuracy so far: 217/260 = 83.5%
+2026-01-10 03:12:44 | INFO |   [270/350] Accuracy so far: 225/270 = 83.3%
+2026-01-10 03:26:52 | INFO |   [280/350] Accuracy so far: 235/280 = 83.9%
+2026-01-10 03:41:02 | INFO |   [290/350] Accuracy so far: 245/290 = 84.5%
